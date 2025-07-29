@@ -1,47 +1,28 @@
 const mongoose = require('mongoose');
 
 const ItemSchema = new mongoose.Schema({
-  paletSize: {
-    type: String,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-  },
+  paletSize: { type: String, required: true },
+  quantity: { type: Number, required: true },
 });
 
 const OrderSchema = new mongoose.Schema({
-  date: { // The custom date field for business logic
-    type: Date,
+  // --- NEW FIELD FOR HUMAN-READABLE ID ---
+  customOrderId: {
+    type: String,
     required: true,
-    default: Date.now,
+    unique: true,
+    index: true, // <-- It's good practice to define the simple index here.
+
   },
-  production_house_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'ProductionHouse',
-    required: true,
-  },
-  factory_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Factory',
-    required: true,
-  },
-  party_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Party',
-    required: true,
-  },
+  date: { type: Date, required: true, default: Date.now },
+  source: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'sourceModel' },
+  sourceModel: { type: String, required: true, enum: ['ProductionHouse', 'AssociateCompany'] },
+  transactionType: { type: String, required: true, enum: ['order', 'bill'] },
+  factory_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Factory', required: true },
+  party_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Party', required: true },
   items: [ItemSchema],
-  vehicle: {
-    type: String,
-    required: true,
-  },
-  vehicle_number: {
-    type: String,
-    required: true,
-  },
-  // Inventory items for this specific order
+  vehicle: { type: String, required: true },
+  vehicle_number: { type: String, required: true },
   film_white: { type: Number, required: true, default: 0 },
   film_blue: { type: Number, required: true, default: 0 },
   patti_role: { type: Number, required: true, default: 0 },
@@ -59,20 +40,15 @@ const OrderSchema = new mongoose.Schema({
   packing_clip: { type: Number, required: true, default: 0 },
   patiya: { type: Number, required: true, default: 0 },
   plypatia: { type: Number, required: true, default: 0 },
+  disabled: { type: Boolean, default: false },
+}, { timestamps: true });
 
-  // ✅ Soft delete field
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-}, {
-  timestamps: true // createdAt and updatedAt timestamps
-});
-
-// ✅ Index definitions for faster queries
-OrderSchema.index({ date: -1 }); // -1 for descending, most recent first
+// --- ADD INDEX FOR THE NEW FIELD ---
+OrderSchema.index({ customOrderId: 1 });
+OrderSchema.index({ source: 1, sourceModel: 1 });
+OrderSchema.index({ transactionType: 1 });
+OrderSchema.index({ date: -1 });
 OrderSchema.index({ factory_id: 1, date: -1 });
 OrderSchema.index({ party_id: 1, date: -1 });
-OrderSchema.index({ disabled: 1 });
 
 module.exports = mongoose.models.Order || mongoose.model('Order', OrderSchema);
