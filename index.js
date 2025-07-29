@@ -8,6 +8,8 @@ const productionHouseRoutes = require('./src/routes/productionHouseRoutes');
 const partyRoutes = require('./src/routes/partyRoutes');
 const factoryRoutes = require('./src/routes/factoryRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
+const palletRoutes = require('./src/routes/palletRoutes'); // <-- ADD THIS LINE
+
 
 const app = express();
 
@@ -25,6 +27,8 @@ app.use('/api/production-house', productionHouseRoutes);
 app.use('/api/parties', partyRoutes); // Using plural form is a common REST convention
 app.use('/api/factories', factoryRoutes); // Using plural form
 app.use('/api/orders', orderRoutes); // Using plural form
+app.use('/api/pallets', palletRoutes); // <-- ADD THIS LINE
+
 
 if (!MONGODB_URI) {
     console.error('FATAL ERROR: MONGODB_URI is not defined in the .env file.');
