@@ -119,3 +119,40 @@ exports.getProductionHouseByID = async (req, res) => {
     res.status(500).json({ message: "Server error." });
   }
 };
+
+
+/**
+ * @desc    Get all inventory items for a specific Production House
+ * @route   GET /api/production-house/:id/inventory
+ * @access  Private (should be protected by auth)
+ */
+exports.getInventoryByProductionHouseId = async (req, res) => {
+  const { id } = req.params;
+
+  // 1. Validate the provided ID format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid Production House ID format.' });
+  }
+
+  try {
+    // 2. Find the Production House by its ID
+    // .select() is used to retrieve ONLY the fields we need (plus the _id).
+    // This is efficient and prevents sensitive data like passwords from ever being sent.
+    const inventoryData = await ProductionHouse.findById(id).select(inventoryFields.join(' '));
+
+    // 3. Check if the Production House was found
+    if (!inventoryData) {
+      return res.status(404).json({ message: 'Production House not found.' });
+    }
+
+    // 4. Respond with the inventory data
+    res.status(200).json({
+      message: 'Inventory retrieved successfully.',
+      data: inventoryData,
+    });
+
+  } catch (error) {
+    console.error('Get Inventory Error:', error);
+    res.status(500).json({ message: 'Server error while retrieving inventory.' });
+  }
+};

@@ -21,5 +21,13 @@ router.post('/login', productionHouseController.login);
 // router.get('/:id', authMiddleware, productionHouseController.getProductionHouseByID);
 router.get('/:id', productionHouseController.getProductionHouseByID);
 
+/**
+ * @route   GET /api/production-house/:id/inventory
+ * @desc    Get all inventory items for a specific Production House
+ * @access  Private
+ */
+// To protect it, you would use: router.get('/:id/inventory', authMiddleware, productionHouseController.getInventoryByProductionHouseId);
+router.get('/:id/inventory', productionHouseController.getInventoryByProductionHouseId);
+
 
 module.exports = router;
