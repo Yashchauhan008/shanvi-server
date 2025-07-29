@@ -9,6 +9,8 @@ const partyRoutes = require('./src/routes/partyRoutes');
 const factoryRoutes = require('./src/routes/factoryRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
 const palletRoutes = require('./src/routes/palletRoutes'); // <-- ADD THIS LINE
+const associateCompanyRoutes = require('./src/routes/associateCompanyRoutes'); // <-- ADD THIS
+
 
 
 const app = express();
@@ -28,6 +30,8 @@ app.use('/api/parties', partyRoutes); // Using plural form is a common REST conv
 app.use('/api/factories', factoryRoutes); // Using plural form
 app.use('/api/orders', orderRoutes); // Using plural form
 app.use('/api/pallets', palletRoutes); // <-- ADD THIS LINE
+app.use('/api/associate-companies', associateCompanyRoutes); // <-- ADD THIS
+
 
 
 if (!MONGODB_URI) {
