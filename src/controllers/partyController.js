@@ -41,6 +41,22 @@ exports.createParty = async (req, res) => {
 };
 
 /**
+ * @desc    Get a lightweight list of all parties (id and name only) for dropdowns
+ * @route   GET /api/parties/list
+ * @access  Private
+ */
+exports.getPartyList = async (req, res) => {
+  try {
+    // .select('_id name') tells MongoDB to only return these two fields.
+    const partyList = await Party.find().select('_id name').sort({ name: 1 });
+    res.status(200).json(partyList);
+  } catch (error) {
+    console.error('Error fetching party list:', error);
+    res.status(500).json({ error: 'Failed to fetch party list.' });
+  }
+};
+
+/**
  * @desc    Get all parties, optionally populating factory details
  * @route   GET /api/parties
  * @access  Private

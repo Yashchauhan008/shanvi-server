@@ -20,6 +20,9 @@ router.put('/:id', partyController.updateParty);
 // DELETE /api/parties/:id - Delete a party by ID
 router.delete('/:id', partyController.deleteParty);
 
+// This route specifically fetches a simple list for forms.
+router.get('/list', partyController.getPartyList);
+
 /*
 // If you want to protect all routes:
 router.use(authMiddleware);

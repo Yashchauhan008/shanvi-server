@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const ProductionHouse = require('../models/productionHouseSchema'); // Corrected path to your schema file
+const mongoose = require('mongoose'); // <-- ADDED THIS LINE
+const ProductionHouse = require('../models/productionHouseSchema');
 
 // /**
 //  * @desc    Register a new Production House
@@ -21,8 +22,6 @@ exports.registerNewProductionHouse = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // 3️⃣ Create the new ProductionHouse instance.
-    // All inventory fields (film_white, patti_role, etc.) will automatically be
-    // set to their default value of 0 as defined in the schema.
     const productionHouse = new ProductionHouse({
       productionHouseName,
       username,
@@ -61,7 +60,7 @@ exports.login = async (req, res) => {
     // 1️⃣ Find the production house by username
     const productionHouse = await ProductionHouse.findOne({ username });
     if (!productionHouse) {
-      return res.status(401).json({ message: 'Invalid credentials.' }); // 401 for unauthorized
+      return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
     // 2️⃣ Compare the provided password with the stored hashed password
@@ -102,7 +101,7 @@ exports.login = async (req, res) => {
 exports.getProductionHouseByID = async (req, res) => {
   try {
     const { id } = req.params;
-    const productionHouse = await ProductionHouse.findById(id).select('-password'); // Exclude password from result
+    const productionHouse = await ProductionHouse.findById(id).select('-password');
 
     if (!productionHouse) {
       return res.status(404).json({ message: "Production House not found." });
@@ -112,7 +111,6 @@ exports.getProductionHouseByID = async (req, res) => {
 
   } catch (error) {
     console.error('Get Production House Error:', error);
-    // Handle cases like invalid ObjectId format
     if (error.kind === 'ObjectId') {
         return res.status(400).json({ message: 'Invalid Production House ID format.' });
     }
@@ -120,6 +118,13 @@ exports.getProductionHouseByID = async (req, res) => {
   }
 };
 
+
+// --- ADDED THIS ARRAY DEFINITION ---
+const inventoryFields = [
+  'film_white', 'film_blue', 'patti_role', 'angle_board_24', 'angle_board_32',
+  'angle_board_36', 'angle_board_39', 'angle_board_48', 'cap_hit', 'cap_simple',
+  'firmshit', 'thermocol', 'mettle_angle', 'black_cover', 'packing_clip', 'patiya', 'plypatia'
+];
 
 /**
  * @desc    Get all inventory items for a specific Production House
@@ -129,23 +134,19 @@ exports.getProductionHouseByID = async (req, res) => {
 exports.getInventoryByProductionHouseId = async (req, res) => {
   const { id } = req.params;
 
-  // 1. Validate the provided ID format
+  // This line will now work because mongoose is imported at the top of the file.
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: 'Invalid Production House ID format.' });
   }
 
   try {
-    // 2. Find the Production House by its ID
-    // .select() is used to retrieve ONLY the fields we need (plus the _id).
-    // This is efficient and prevents sensitive data like passwords from ever being sent.
+    // This line will now work because the inventoryFields array is defined above.
     const inventoryData = await ProductionHouse.findById(id).select(inventoryFields.join(' '));
 
-    // 3. Check if the Production House was found
     if (!inventoryData) {
       return res.status(404).json({ message: 'Production House not found.' });
     }
 
-    // 4. Respond with the inventory data
     res.status(200).json({
       message: 'Inventory retrieved successfully.',
       data: inventoryData,
@@ -154,5 +155,67 @@ exports.getInventoryByProductionHouseId = async (req, res) => {
   } catch (error) {
     console.error('Get Inventory Error:', error);
     res.status(500).json({ message: 'Server error while retrieving inventory.' });
+  }
+};
+
+
+/**
+ * @desc    Add quantities to a Production House's inventory
+ * @route   POST /api/production-house/:id/inventory
+ * @access  Private (should be protected by auth)
+ */
+exports.addInventory = async (req, res) => {
+  const { id } = req.params;
+  const incomingStock = req.body; // e.g., { "Film White": 100, "Patti Role": 50 }
+
+  // 1. Validate the Production House ID
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid Production House ID format.' });
+  }
+
+  // 2. Check if there's any data to add
+  if (!incomingStock || Object.keys(incomingStock).length === 0) {
+    return res.status(400).json({ message: 'No inventory data provided to add.' });
+  }
+
+  // 3. Prepare the data for MongoDB's $inc operator
+  // We need to convert the form's keys ("Film White") to the schema's keys ("film_white")
+  const updateOperation = {};
+  for (const key in incomingStock) {
+    const value = incomingStock[key];
+    if (typeof value === 'number' && value > 0) {
+      // Convert "Film White" to "film_white"
+      const schemaKey = key.toLowerCase().replace(/ /g, '_');
+      updateOperation[schemaKey] = value;
+    }
+  }
+
+  // 4. Check if there are any valid items to update after formatting
+  if (Object.keys(updateOperation).length === 0) {
+    return res.status(400).json({ message: 'No valid inventory items to update.' });
+  }
+
+  try {
+    // 5. Find the Production House and atomically increment the inventory fields
+    // The { new: true } option returns the document *after* the update has been applied.
+    const updatedProductionHouse = await ProductionHouse.findByIdAndUpdate(
+      id,
+      { $inc: updateOperation }, // $inc is perfect for adding quantities
+      { new: true }
+    ).select(inventoryFields.join(' ')); // Return only the updated inventory
+
+    if (!updatedProductionHouse) {
+      return res.status(404).json({ message: 'Production House not found.' });
+    }
+
+    // 6. Respond with the new, updated inventory data
+    res.status(200).json({
+      message: 'Inventory updated successfully.',
+      data: updatedProductionHouse,
+    });
+
+  } catch (error) {
+    console.error('Add Inventory Error:', error);
+    res.status(500).json({ message: 'Server error while updating inventory.' });
   }
 };
