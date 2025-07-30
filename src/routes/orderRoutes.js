@@ -75,7 +75,7 @@ router.get('/', orderController.getOrders);
 // @route   GET /api/orders/stats/pallets
 // @desc    Get aggregated pallet usage statistics
 // @access  Private
-// router.get('/stats/pallets', orderController.getPalletStats);
+router.get('/stats/pallets', orderController.getPalletStats);
 
 // @route   GET /api/orders
 // @desc    Get a list of orders with optional filters

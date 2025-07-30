@@ -19,68 +19,6 @@ async function getNextSequenceValue(sequenceName) {
   return sequenceDocument.sequence_value;
 }
 
-// --- UPDATED addOrder CONTROLLER ---
-// exports.addOrder = async (req, res) => {
-//   const session = await mongoose.startSession();
-//   session.startTransaction();
-//   try {
-//     const orderData = req.body;
-//     if (!orderData.source || !orderData.sourceModel || !orderData.transactionType) {
-//       throw new Error('Source, source model, and transaction type are required.');
-//     }
-
-//     // --- GENERATE CUSTOM ID ---
-//     let customId;
-//     if (orderData.transactionType === 'order') {
-//       const seq = await getNextSequenceValue('orderId');
-//       customId = `ORD-${String(seq).padStart(5, '0')}`;
-//     } else if (orderData.transactionType === 'bill') {
-//       const seq = await getNextSequenceValue('billId');
-//       customId = `BILL-${String(seq).padStart(5, '0')}`;
-//     } else {
-//       throw new Error('Invalid transaction type.');
-//     }
-//     orderData.customOrderId = customId; // Add to the data object
-
-//     // --- Inventory Logic (Unchanged) ---
-//     let inventoryToSubtract = {};
-//     let productionHouseId = null;
-//     if (orderData.sourceModel === 'ProductionHouse') {
-//       productionHouseId = orderData.source;
-//       const productionHouse = await ProductionHouse.findById(productionHouseId).session(session);
-//       if (!productionHouse) throw new Error('Production House not found.');
-//       for (const field of inventoryFields) {
-//         if (orderData[field] && orderData[field] > 0) {
-//           if (productionHouse[field] < orderData[field]) {
-//             throw new Error(`Not enough stock for ${field}.`);
-//           }
-//           inventoryToSubtract[field] = -orderData[field];
-//         }
-//       }
-//     }
-
-//     const newOrder = new Order(orderData);
-//     await newOrder.save({ session });
-
-//     if (Object.keys(inventoryToSubtract).length > 0) {
-//       await ProductionHouse.findByIdAndUpdate(
-//         productionHouseId,
-//         { $inc: inventoryToSubtract },
-//         { session }
-//       );
-//     }
-
-//     await session.commitTransaction();
-//     res.status(201).json({ message: 'Transaction created successfully!', data: newOrder });
-//   } catch (error) {
-//     await session.abortTransaction();
-//     console.error('Add Order Transaction Error:', error);
-//     res.status(500).json({ message: error.message || 'Failed to create order. Transaction was rolled back.' });
-//   } finally {
-//     session.endSession();
-//   }
-// };
-
 
 exports.addOrder = async (req, res) => {
     const session = await mongoose.startSession();
@@ -173,54 +111,6 @@ exports.addOrder = async (req, res) => {
     }
   };
 
-  
-// // --- UPDATED getOrders CONTROLLER ---
-// exports.getOrders = async (req, res) => {
-//     try {
-//         const query = { disabled: false };
-
-//         // Add new filters for transactionType and source
-//         if (req.query.transactionType) {
-//             query.transactionType = req.query.transactionType;
-//         }
-//         if (req.query.source) {
-//             const [sourceModel, sourceId] = req.query.source.split(':');
-//             if (sourceModel && sourceId) {
-//                 query.sourceModel = sourceModel;
-//                 query.source = sourceId;
-//             }
-//         }
-//         if (req.query.party_id) query.party_id = req.query.party_id;
-//         if (req.query.factory_id) query.factory_id = req.query.factory_id;
-//         if (req.query.startDate && req.query.endDate) {
-//             query.date = { $gte: new Date(req.query.startDate), $lte: new Date(req.query.endDate) };
-//         }
-
-//         const page = parseInt(req.query.page, 10) || 1;
-//         const limit = parseInt(req.query.limit, 10) || 20;
-//         const skip = (page - 1) * limit;
-
-//         const orders = await Order.find(query)
-//             .populate('source', 'username productionHouseName name') // Populate the polymorphic field
-//             .populate('party_id', 'name')
-//             .populate('factory_id', 'name')
-//             .sort({ date: -1 })
-//             .skip(skip)
-//             .limit(limit);
-
-//         const total = await Order.countDocuments(query);
-
-//         res.status(200).json({
-//             message: 'Orders retrieved successfully.',
-//             data: orders,
-//             pagination: { total, page, limit, totalPages: Math.ceil(total / limit) }
-//         });
-//     } catch (error) {
-//         console.error('Get Orders Error:', error);
-//         res.status(500).json({ message: 'Failed to retrieve orders.' });
-//     }
-// };
-
 
 /**
  * @desc    Get a list of all orders with filtering and pagination.
@@ -299,4 +189,91 @@ exports.getOrders = async (req, res) => {
     }
 };
 
+
+/**
+ * @desc    Get advanced, aggregated pallet usage statistics based on filters.
+ * @route   GET /api/orders/stats/pallets
+ * @access  Private
+ */
+exports.getPalletStats = async (req, res) => {
+  try {
+    // --- 1. Build the initial match query from request parameters ---
+    const matchQuery = { disabled: false };
+
+    // Filter by Party or Factory
+    if (req.query.party_id) {
+      matchQuery.party_id = new mongoose.Types.ObjectId(req.query.party_id);
+    }
+    if (req.query.factory_id) {
+      matchQuery.factory_id = new mongoose.Types.ObjectId(req.query.factory_id);
+    }
+
+    // Filter by Associate Company (if the source is an AssociateCompany)
+    if (req.query.associate_company_id) {
+      matchQuery.sourceModel = 'AssociateCompany';
+      matchQuery.source = new mongoose.Types.ObjectId(req.query.associate_company_id);
+    }
+
+    // Filter by Date Range
+    if (req.query.fromDate && req.query.toDate) {
+      matchQuery.date = {
+        $gte: new Date(req.query.fromDate),
+        $lte: new Date(req.query.toDate),
+      };
+    }
+
+    // --- 2. Define the Advanced Aggregation Pipeline ---
+    const palletStats = await Order.aggregate([
+      // Stage 1: Filter documents based on the query parameters
+      { $match: matchQuery },
+
+      // Stage 2: Unwind the 'items' array to process each pallet item individually
+      { $unwind: '$items' },
+
+      // Stage 3: Group by pallet size and conditionally sum quantities
+      {
+        $group: {
+          _id: '$items.paletSize', // Group by the pallet size
+          
+          // Use $cond to sum quantity only if transactionType is 'order'
+          totalOut: {
+            $sum: {
+              $cond: [{ $eq: ['$transactionType', 'order'] }, '$items.quantity', 0]
+            }
+          },
+          
+          // Use $cond to sum quantity only if transactionType is 'bill'
+          totalUsed: {
+            $sum: {
+              $cond: [{ $eq: ['$transactionType', 'bill'] }, '$items.quantity', 0]
+            }
+          }
+        }
+      },
+
+      // Stage 4: Reshape the output and calculate the 'remains'
+      {
+        $project: {
+          _id: 0, // Exclude the default _id field
+          size: '$_id', // Rename _id to 'size'
+          totalOut: 1,
+          totalUsed: 1,
+          remains: { $subtract: ['$totalOut', '$totalUsed'] } // Calculate remains
+        }
+      },
+      
+      // Stage 5: Sort the results by pallet size
+      { $sort: { size: 1 } },
+    ]);
+
+    res.status(200).json({
+      message: 'Pallet statistics retrieved successfully.',
+      data: palletStats,
+    });
+
+  } catch (error) {
+    console.error('Get Pallet Stats Error:', error);
+    res.status(500).json({ message: 'Failed to retrieve pallet statistics.' });
+  }
+};
 // ... (your other controller functions like getPalletStats, etc.)
