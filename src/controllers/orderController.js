@@ -261,80 +261,69 @@ exports.getOrders = async (req, res) => {
 };
 
 
+// ... (keep all other controller functions and require statements)
+
 /**
- * @desc    Get advanced, aggregated pallet usage statistics based on filters.
+ * @desc    Get aggregated pallet statistics based on filters
  * @route   GET /api/orders/stats/pallets
  * @access  Private
  */
 exports.getPalletStats = async (req, res) => {
   try {
-    // --- 1. Build the initial match query from request parameters ---
-    const matchQuery = { disabled: false };
+    const { party_id, factory_id, source, startDate, endDate } = req.query;
+    const matchStage = { disabled: false };
 
-    // Filter by Party or Factory
-    if (req.query.party_id) {
-      matchQuery.party_id = new mongoose.Types.ObjectId(req.query.party_id);
-    }
-    if (req.query.factory_id) {
-      matchQuery.factory_id = new mongoose.Types.ObjectId(req.query.factory_id);
-    }
-
-    // Filter by Associate Company (if the source is an AssociateCompany)
-    if (req.query.associate_company_id) {
-      matchQuery.sourceModel = 'AssociateCompany';
-      matchQuery.source = new mongoose.Types.ObjectId(req.query.associate_company_id);
+    // --- 1. Build the initial match stage (same as before) ---
+    if (party_id) matchStage.party_id = new mongoose.Types.ObjectId(party_id);
+    if (factory_id) matchStage.factory_id = new mongoose.Types.ObjectId(factory_id);
+    if (source) matchStage.source = new mongoose.Types.ObjectId(source);
+    if (startDate && endDate) {
+      matchStage.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
     }
 
-    // Filter by Date Range
-    if (req.query.fromDate && req.query.toDate) {
-      matchQuery.date = {
-        $gte: new Date(req.query.fromDate),
-        $lte: new Date(req.query.toDate),
-      };
-    }
-
-    // --- 2. Define the Advanced Aggregation Pipeline ---
+    // --- ✅ 2. The Corrected Aggregation Pipeline ---
     const palletStats = await Order.aggregate([
-      // Stage 1: Filter documents based on the query parameters
-      { $match: matchQuery },
-
-      // Stage 2: Unwind the 'items' array to process each pallet item individually
+      // Stage 1: Filter documents based on query parameters
+      { $match: matchStage },
+      
+      // Stage 2: Deconstruct the 'items' array into separate documents
       { $unwind: '$items' },
-
-      // Stage 3: Group by pallet size and conditionally sum quantities
+      
+      // Stage 3: Group by pallet size and calculate 'totalOut' and 'totalIn'
       {
         $group: {
           _id: '$items.paletSize', // Group by the pallet size
           
-          // Use $cond to sum quantity only if transactionType is 'order'
+          // Calculate totalOut: sum quantity ONLY if transactionType is 'order'
           totalOut: {
             $sum: {
               $cond: [{ $eq: ['$transactionType', 'order'] }, '$items.quantity', 0]
             }
           },
           
-          // Use $cond to sum quantity only if transactionType is 'bill'
-          totalUsed: {
+          // Calculate totalIn: sum quantity ONLY if transactionType is 'bill'
+          totalIn: {
             $sum: {
               $cond: [{ $eq: ['$transactionType', 'bill'] }, '$items.quantity', 0]
             }
           }
         }
       },
-
-      // Stage 4: Reshape the output and calculate the 'remains'
+      
+      // Stage 4: Calculate the netBalance and format the output
       {
         $project: {
           _id: 0, // Exclude the default _id field
-          size: '$_id', // Rename _id to 'size'
-          totalOut: 1,
-          totalUsed: 1,
-          remains: { $subtract: ['$totalOut', '$totalUsed'] } // Calculate remains
+          palletSize: '$_id', // Rename _id to palletSize for the frontend
+          totalOut: '$totalOut',
+          totalIn: '$totalIn',
+          // Calculate the difference
+          netBalance: { $subtract: ['$totalOut', '$totalIn'] }
         }
       },
-      
-      // Stage 5: Sort the results by pallet size
-      { $sort: { size: 1 } },
+
+      // Stage 5: Sort the results alphabetically by pallet size
+      { $sort: { palletSize: 1 } }
     ]);
 
     res.status(200).json({
@@ -347,7 +336,6 @@ exports.getPalletStats = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve pallet statistics.' });
   }
 };
-// ... (your other controller functions like getPalletStats, etc.)
 
 
 /**
