@@ -378,3 +378,37 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete order due to a server error.' });
   }
 };
+
+
+
+
+
+/**
+ * @desc    Find a single order by its customOrderId for the pop-up search
+ * @route   GET /api/orders/search/:customId
+ * @access  Private
+ */
+exports.findOrderByCustomId = async (req, res) => {
+  try {
+    const { customId } = req.params;
+
+    // Use a case-insensitive regex to find the exact match.
+    const order = await Order.findOne({ customOrderId: { $regex: `^${customId}$`, $options: 'i' } })
+      .populate('party_id', 'name')
+      .populate('factory_id', 'name')
+      .populate('source', 'name username');
+
+    if (!order) {
+      return res.status(404).json({ message: `No record found with the ID '${customId}'.` });
+    }
+
+    res.status(200).json({
+      message: 'Record found successfully.',
+      data: order,
+    });
+
+  } catch (error) {
+    console.error('Search Order by Custom ID Error:', error);
+    res.status(500).json({ message: 'Server error during search.' });
+  }
+};

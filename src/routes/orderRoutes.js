@@ -91,6 +91,9 @@ router.get('/:id', orderController.getOrderById);
 
 router.delete('/:id', orderController.deleteOrder);
 
+router.get('/search/:customId', orderController.findOrderByCustomId);
+
+
 
 
 
