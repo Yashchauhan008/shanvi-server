@@ -10,6 +10,7 @@ const factoryRoutes = require('./src/routes/factoryRoutes');
 const orderRoutes = require('./src/routes/orderRoutes');
 const palletRoutes = require('./src/routes/palletRoutes'); // <-- ADD THIS LINE
 const associateCompanyRoutes = require('./src/routes/associateCompanyRoutes'); // <-- ADD THIS
+const reportRoutes = require('./src/routes/reportRoutes'); // <-- 1. Import the new routes
 
 
 
@@ -31,6 +32,7 @@ app.use('/api/factories', factoryRoutes); // Using plural form
 app.use('/api/orders', orderRoutes); // Using plural form
 app.use('/api/pallets', palletRoutes); // <-- ADD THIS LINE
 app.use('/api/associate-companies', associateCompanyRoutes); // <-- ADD THIS
+app.use('/api/reports', reportRoutes); // <-- 2. Mount the new routes
 
 
 
