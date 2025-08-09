@@ -20,71 +20,6 @@ async function getNextSequenceValue(sequenceName) {
 }
 
 
-// exports.addOrder = async (req, res) => {
-//   const session = await mongoose.startSession();
-//   session.startTransaction();
-
-//   try {
-//     const { source, sourceModel, transactionType, ...orderData } = req.body;
-
-//     // --- Data Sanitization (Unchanged) ---
-//     const newOrderData = { /* ... */ };
-
-//     // --- Inventory Validation (Unchanged) ---
-//     if (transactionType === 'order' && sourceModel === 'ProductionHouse') {
-//       // ... (validation logic is unchanged)
-//     }
-
-//     // --- ✅ THE FIX: Align the counterId with your database ---
-//     const prefix = transactionType === 'order' ? 'ORD' : 'BILL';
-//     // This now correctly looks for "orderId" or "billId"
-//     const counterId = transactionType === 'order' ? 'orderId' : 'billId'; 
-
-//     // --- The rest of the logic now works perfectly ---
-//     let counter = await Counter.findById(counterId).session(session);
-
-//     if (!counter) {
-//       // This is a safety net in case the counter document is ever deleted
-//       throw new Error(`Counter document with ID '${counterId}' not found. Please create it.`);
-//     }
-
-//     const updatedCounter = await Counter.findByIdAndUpdate(
-//       counterId,
-//       { $inc: { sequence_value: 1 } }, // Use your field name 'sequence_value'
-//       { new: true, session }
-//     );
-
-//     if (!updatedCounter) {
-//         throw new Error('Failed to update the order/bill counter.');
-//     }
-
-//     newOrderData.customOrderId = `${prefix}-${String(updatedCounter.sequence_value).padStart(4, '0')}`;
-
-
-//     // --- Create the Order/Bill Document (Unchanged) ---
-//     const order = new Order(newOrderData);
-//     await order.save({ session });
-
-//     // --- Atomically Update Inventory (Unchanged) ---
-//     if (transactionType === 'order' && sourceModel === 'ProductionHouse') {
-//       // ... (inventory update logic is unchanged)
-//     }
-
-//     // --- Commit Transaction and Respond (Unchanged) ---
-//     await session.commitTransaction();
-//     res.status(201).json({
-//       message: `${transactionType.charAt(0).toUpperCase() + transactionType.slice(1)} created successfully!`,
-//       data: order,
-//     });
-
-//   } catch (error) {
-//     await session.abortTransaction();
-//     console.error('Add Order/Bill Error:', error.message);
-//     res.status(400).json({ message: error.message });
-//   } finally {
-//     session.endSession();
-//   }
-// };
 
 exports.addOrder = async (req, res) => {
   const session = await mongoose.startSession();
@@ -368,5 +303,78 @@ exports.getOrderById = async (req, res) => {
       return res.status(400).json({ message: 'Invalid Order ID format.' });
     }
     res.status(500).json({ message: 'Server error while retrieving the order.' });
+  }
+};
+
+
+
+// Add this function to your existing orderController.js
+
+/**
+ * @desc    Soft delete an order and restore inventory if applicable
+ * @route   DELETE /api/orders/:id
+ * @access  Private
+ */
+exports.deleteOrder = async (req, res) => {
+  const { id } = req.params;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // 1. Find the order within the transaction
+    const order = await Order.findById(id).session(session);
+    if (!order) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    // If already disabled, do nothing
+    if (order.disabled) {
+      await session.abortTransaction();
+      session.endSession();
+      return res.status(400).json({ message: 'This order has already been deleted.' });
+    }
+
+    // 2. Check if the order was from a ProductionHouse and affects inventory
+    if (order.sourceModel === 'ProductionHouse' && order.transactionType === 'order') {
+      const productionHouse = await ProductionHouse.findById(order.source).session(session);
+      if (!productionHouse) {
+        throw new Error('Source Production House not found for inventory restoration.');
+      }
+
+      // Create the update object to add inventory back
+      const inventoryToRestore = {};
+      inventoryFields.forEach(field => {
+        if (order[field] > 0) {
+          inventoryToRestore[field] = order[field];
+        }
+      });
+
+      // Use $inc to add the values back to the production house's inventory
+      if (Object.keys(inventoryToRestore).length > 0) {
+        await ProductionHouse.updateOne(
+          { _id: order.source },
+          { $inc: inventoryToRestore },
+          { session }
+        );
+      }
+    }
+
+    // 3. Mark the order as disabled (soft delete)
+    order.disabled = true;
+    await order.save({ session });
+
+    // 4. Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(200).json({ message: 'Order deleted successfully and inventory restored.' });
+
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error('Delete Order Error:', error);
+    res.status(500).json({ message: 'Failed to delete order due to a server error.' });
   }
 };

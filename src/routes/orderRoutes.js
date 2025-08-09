@@ -89,6 +89,9 @@ router.get('/stats/pallets', orderController.getPalletStats);
 
 router.get('/:id', orderController.getOrderById);
 
+router.delete('/:id', orderController.deleteOrder);
+
+
 
 
 module.exports = router;
