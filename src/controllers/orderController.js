@@ -412,3 +412,35 @@ exports.findOrderByCustomId = async (req, res) => {
     res.status(500).json({ message: 'Server error during search.' });
   }
 };
+
+
+// ✅ --- THIS IS THE SIMPLIFIED AND CORRECTED CONTROLLER FUNCTION ---
+/**
+ * @desc    Update an existing order/bill (Party, Factory, Date, Vehicle, Pallet Items).
+ * @route   PUT /api/orders/:id
+ * @access  Private
+ */
+exports.updateOrder = async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  // The inventory adjustment logic has been completely removed.
+  // We are now only updating the fields provided in the request body.
+
+  try {
+    // Find the order and update it with the new data in a single, atomic operation.
+    // Mongoose will only update the fields that are present in the `updatedData` object.
+    const updatedOrder = await Order.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    res.status(200).json({ message: 'Transaction updated successfully!', data: updatedOrder });
+
+  } catch (error) {
+    console.error('Update Order Error:', error);
+    res.status(400).json({ message: error.message || 'Failed to update transaction.' });
+  }
+};
+

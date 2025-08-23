@@ -93,6 +93,9 @@ router.delete('/:id', orderController.deleteOrder);
 
 router.get('/search/:customId', orderController.findOrderByCustomId);
 
+router.put('/:id', orderController.updateOrder);
+
+
 
 
 
