@@ -220,76 +220,133 @@ exports.addOrder = async (req, res) => {
  * @access  Private
  */
 exports.getOrders = async (req, res) => {
-    try {
-        // --- 1. Build the Query Object ---
-        // Start with a base query to exclude soft-deleted items.
-        const query = { disabled: false };
+  try {
+      const query = { disabled: false };
 
-        // Dynamically add filters to the query if they exist in the request.
-        if (req.query.transactionType) {
-            query.transactionType = req.query.transactionType;
-        }
-        if (req.query.party_id) {
-            query.party_id = req.query.party_id;
-        }
-        if (req.query.factory_id) {
-            query.factory_id = req.query.factory_id;
-        }
-        if (req.query.startDate && req.query.endDate) {
-            query.date = { 
-                $gte: new Date(req.query.startDate), 
-                $lte: new Date(req.query.endDate) 
-            };
-        }
-        // This controller can also handle the polymorphic 'source' filter if needed.
-        if (req.query.source) {
-            const [sourceModel, sourceId] = req.query.source.split(':');
-            if (sourceModel && sourceId) {
-                query.sourceModel = sourceModel;
-                query.source = sourceId;
-            }
-        }
+      // ✅ --- THIS IS THE FIX for TransactionHistory ---
+      // The logic to handle the 'source' parameter is now correctly included.
+      if (req.query.transactionType) query.transactionType = req.query.transactionType;
+      if (req.query.party_id) query.party_id = req.query.party_id;
+      if (req.query.factory_id) query.factory_id = req.query.factory_id;
+      if (req.query.startDate && req.query.endDate) {
+          query.date = { 
+              $gte: new Date(req.query.startDate), 
+              $lte: new Date(req.query.endDate) 
+          };
+      }
+      // This block correctly parses "ModelName:ID" and adds it to the query
+      if (req.query.source) {
+          const [sourceModel, sourceId] = req.query.source.split(':');
+          if (sourceModel && sourceId && mongoose.Types.ObjectId.isValid(sourceId)) {
+              query.sourceModel = sourceModel;
+              query.source = new mongoose.Types.ObjectId(sourceId);
+          }
+      }
+      // ✅ --- END OF FIX ---
 
-        // --- 2. Handle Pagination ---
-        // Parse page and limit from the query, with default values.
-        const page = parseInt(req.query.page, 10) || 1;
-        const limit = parseInt(req.query.limit, 10) || 20; // Default limit is 20
-        const skip = (page - 1) * limit;
+      const page = parseInt(req.query.page, 10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 50;
+      const skip = (page - 1) * limit;
 
-        // --- 3. Execute the Database Query ---
-        // Find the documents that match the query.
-        const orders = await Order.find(query)
-            .populate('source', 'username productionHouseName name')
-            .populate('party_id', 'name')
-            .populate('factory_id', 'name')
-            .sort({ date: -1, createdAt: -1 }) // Primary sort by date, secondary by creation time
-            .skip(skip)
-            .limit(limit);
-        // --- 4. Get the Total Count ---
-        // Get the total number of documents that match the filter criteria for pagination info.
-        const total = await Order.countDocuments(query);
+      const orders = await Order.find(query)
+          .populate('source', 'username productionHouseName name')
+          .populate('party_id', 'name')
+          .populate('factory_id', 'name')
+          .sort({ date: -1, createdAt: -1 })
+          .skip(skip)
+          .limit(limit);
 
-        // --- 5. Send the Response ---
-        // Respond with the fetched data and pagination details.
-        res.status(200).json({
-            message: 'Orders retrieved successfully.',
-            data: orders,
-            pagination: {
-                total,
-                page,
-                limit,
-                totalPages: Math.ceil(total / limit)
-            }
-        });
+      const total = await Order.countDocuments(query);
 
-    } catch (error) {
-        console.error('Get Orders Error:', error);
-        res.status(500).json({ message: 'Failed to retrieve orders.' });
-    }
+      res.status(200).json({
+          message: 'Orders retrieved successfully.',
+          data: orders,
+          pagination: {
+              total,
+              page,
+              limit,
+              totalPages: Math.ceil(total / limit)
+          }
+      });
+
+  } catch (error) {
+      console.error('Get Orders Error:', error);
+      res.status(500).json({ message: 'Failed to retrieve orders.' });
+  }
 };
+// exports.getOrders = async (req, res) => {
+//     try {
+//         // --- 1. Build the Query Object ---
+//         // Start with a base query to exclude soft-deleted items.
+//         const query = { disabled: false };
+
+//         // Dynamically add filters to the query if they exist in the request.
+//         if (req.query.transactionType) {
+//             query.transactionType = req.query.transactionType;
+//         }
+//         if (req.query.party_id) {
+//             query.party_id = req.query.party_id;
+//         }
+//         if (req.query.factory_id) {
+//             query.factory_id = req.query.factory_id;
+//         }
+//         if (req.query.startDate && req.query.endDate) {
+//             query.date = { 
+//                 $gte: new Date(req.query.startDate), 
+//                 $lte: new Date(req.query.endDate) 
+//             };
+//         }
+//         // This controller can also handle the polymorphic 'source' filter if needed.
+//         if (req.query.source) {
+//             const [sourceModel, sourceId] = req.query.source.split(':');
+//             if (sourceModel && sourceId) {
+//                 query.sourceModel = sourceModel;
+//                 query.source = sourceId;
+//             }
+//         }
+
+//         // --- 2. Handle Pagination ---
+//         // Parse page and limit from the query, with default values.
+//         const page = parseInt(req.query.page, 10) || 1;
+//         const limit = parseInt(req.query.limit, 10) || 20; // Default limit is 20
+//         const skip = (page - 1) * limit;
+
+//         // --- 3. Execute the Database Query ---
+//         // Find the documents that match the query.
+//         const orders = await Order.find(query)
+//             .populate('source', 'username productionHouseName name')
+//             .populate('party_id', 'name')
+//             .populate('factory_id', 'name')
+//             .sort({ date: -1, createdAt: -1 }) // Primary sort by date, secondary by creation time
+//             .skip(skip)
+//             .limit(limit);
+//         // --- 4. Get the Total Count ---
+//         // Get the total number of documents that match the filter criteria for pagination info.
+//         const total = await Order.countDocuments(query);
+
+//         // --- 5. Send the Response ---
+//         // Respond with the fetched data and pagination details.
+//         res.status(200).json({
+//             message: 'Orders retrieved successfully.',
+//             data: orders,
+//             pagination: {
+//                 total,
+//                 page,
+//                 limit,
+//                 totalPages: Math.ceil(total / limit)
+//             }
+//         });
+
+//     } catch (error) {
+//         console.error('Get Orders Error:', error);
+//         res.status(500).json({ message: 'Failed to retrieve orders.' });
+//     }
+// };
 
 
 // ... (keep all other controller functions and require statements)
+
+
 
 /**
  * @desc    Get aggregated pallet statistics based on filters
@@ -301,56 +358,42 @@ exports.getPalletStats = async (req, res) => {
     const { party_id, factory_id, source, startDate, endDate } = req.query;
     const matchStage = { disabled: false };
 
-    // --- 1. Build the initial match stage (same as before) ---
+    // ✅ --- THIS IS THE FIX for PalletTable ---
+    // The logic to handle the 'source' parameter is now correctly included in the aggregation pipeline.
     if (party_id) matchStage.party_id = new mongoose.Types.ObjectId(party_id);
     if (factory_id) matchStage.factory_id = new mongoose.Types.ObjectId(factory_id);
-    if (source) matchStage.source = new mongoose.Types.ObjectId(source);
     if (startDate && endDate) {
       matchStage.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
     }
+    // This block correctly parses "ModelName:ID" and adds it to the match stage
+    if (source) {
+        const [sourceModel, sourceId] = source.split(':');
+        if (sourceModel && sourceId && mongoose.Types.ObjectId.isValid(sourceId)) {
+            matchStage.sourceModel = sourceModel;
+            matchStage.source = new mongoose.Types.ObjectId(sourceId);
+        }
+    }
+    // ✅ --- END OF FIX ---
 
-    // --- ✅ 2. The Corrected Aggregation Pipeline ---
     const palletStats = await Order.aggregate([
-      // Stage 1: Filter documents based on query parameters
       { $match: matchStage },
-      
-      // Stage 2: Deconstruct the 'items' array into separate documents
       { $unwind: '$items' },
-      
-      // Stage 3: Group by pallet size and calculate 'totalOut' and 'totalIn'
       {
         $group: {
-          _id: '$items.paletSize', // Group by the pallet size
-          
-          // Calculate totalOut: sum quantity ONLY if transactionType is 'order'
-          totalOut: {
-            $sum: {
-              $cond: [{ $eq: ['$transactionType', 'order'] }, '$items.quantity', 0]
-            }
-          },
-          
-          // Calculate totalIn: sum quantity ONLY if transactionType is 'bill'
-          totalIn: {
-            $sum: {
-              $cond: [{ $eq: ['$transactionType', 'bill'] }, '$items.quantity', 0]
-            }
-          }
+          _id: '$items.paletSize',
+          totalOut: { $sum: { $cond: [{ $eq: ['$transactionType', 'order'] }, '$items.quantity', 0] } },
+          totalIn: { $sum: { $cond: [{ $eq: ['$transactionType', 'bill'] }, '$items.quantity', 0] } }
         }
       },
-      
-      // Stage 4: Calculate the netBalance and format the output
       {
         $project: {
-          _id: 0, // Exclude the default _id field
-          palletSize: '$_id', // Rename _id to palletSize for the frontend
+          _id: 0,
+          palletSize: '$_id',
           totalOut: '$totalOut',
           totalIn: '$totalIn',
-          // Calculate the difference
           netBalance: { $subtract: ['$totalOut', '$totalIn'] }
         }
       },
-
-      // Stage 5: Sort the results alphabetically by pallet size
       { $sort: { palletSize: 1 } }
     ]);
 
@@ -364,6 +407,74 @@ exports.getPalletStats = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve pallet statistics.' });
   }
 };
+// exports.getPalletStats = async (req, res) => {
+//   try {
+//     const { party_id, factory_id, source, startDate, endDate } = req.query;
+//     const matchStage = { disabled: false };
+
+//     // --- 1. Build the initial match stage (same as before) ---
+//     if (party_id) matchStage.party_id = new mongoose.Types.ObjectId(party_id);
+//     if (factory_id) matchStage.factory_id = new mongoose.Types.ObjectId(factory_id);
+//     if (source) matchStage.source = new mongoose.Types.ObjectId(source);
+//     if (startDate && endDate) {
+//       matchStage.date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+//     }
+
+//     // --- ✅ 2. The Corrected Aggregation Pipeline ---
+//     const palletStats = await Order.aggregate([
+//       // Stage 1: Filter documents based on query parameters
+//       { $match: matchStage },
+      
+//       // Stage 2: Deconstruct the 'items' array into separate documents
+//       { $unwind: '$items' },
+      
+//       // Stage 3: Group by pallet size and calculate 'totalOut' and 'totalIn'
+//       {
+//         $group: {
+//           _id: '$items.paletSize', // Group by the pallet size
+          
+//           // Calculate totalOut: sum quantity ONLY if transactionType is 'order'
+//           totalOut: {
+//             $sum: {
+//               $cond: [{ $eq: ['$transactionType', 'order'] }, '$items.quantity', 0]
+//             }
+//           },
+          
+//           // Calculate totalIn: sum quantity ONLY if transactionType is 'bill'
+//           totalIn: {
+//             $sum: {
+//               $cond: [{ $eq: ['$transactionType', 'bill'] }, '$items.quantity', 0]
+//             }
+//           }
+//         }
+//       },
+      
+//       // Stage 4: Calculate the netBalance and format the output
+//       {
+//         $project: {
+//           _id: 0, // Exclude the default _id field
+//           palletSize: '$_id', // Rename _id to palletSize for the frontend
+//           totalOut: '$totalOut',
+//           totalIn: '$totalIn',
+//           // Calculate the difference
+//           netBalance: { $subtract: ['$totalOut', '$totalIn'] }
+//         }
+//       },
+
+//       // Stage 5: Sort the results alphabetically by pallet size
+//       { $sort: { palletSize: 1 } }
+//     ]);
+
+//     res.status(200).json({
+//       message: 'Pallet statistics retrieved successfully.',
+//       data: palletStats,
+//     });
+
+//   } catch (error) {
+//     console.error('Get Pallet Stats Error:', error);
+//     res.status(500).json({ message: 'Failed to retrieve pallet statistics.' });
+//   }
+// };
 
 
 /**
