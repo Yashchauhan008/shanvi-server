@@ -42,10 +42,10 @@ exports.generateOrderReport = async (req, res) => {
     // --- Fetch ALL matching orders without pagination ---
     // Populate all necessary fields for a human-readable report
     const orders = await Order.find(query)
-      .populate('party_id', 'name')
-      .populate('factory_id', 'name')
-      .populate('source', 'name username') // Gets name from AssociateCompany or username from ProductionHouse
-      .sort({ date: -1 });
+    .populate('party_id', 'name')
+    .populate('factory_id', 'name')
+    .populate('source', 'name username')
+    .sort({ date: -1, createdAt: -1 }); 
 
     res.status(200).json({
       message: `${orders.length} records found.`,
