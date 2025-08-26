@@ -3,6 +3,13 @@ const ProductionHouse = require('../models/productionHouseSchema');
 const Counter = require('../models/counterSchema'); // <-- Import the new Counter model
 const mongoose = require('mongoose');
 
+const parseCalculableString = (inputString) => {
+  if (!inputString || typeof inputString !== 'string') return 0;
+  return inputString.split('+').reduce((sum, part) => {
+    const num = parseInt(part.trim(), 10);
+    return sum + (isNaN(num) ? 0 : num);
+  }, 0);
+};
 const inventoryFields = [
   'film_white', 'film_blue', 'patti_role', 'angle_board_24', 'angle_board_32',
   'angle_board_36', 'angle_board_39', 'angle_board_48', 'cap_hit', 'cap_simple',
@@ -21,14 +28,104 @@ async function getNextSequenceValue(sequenceName) {
 
 
 
+// exports.addOrder = async (req, res) => {
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+
+//   try {
+//     const newOrderData = {
+//       date: req.body.date,
+//       source: req.body.source,
+//       sourceModel: req.body.sourceModel,
+//       transactionType: req.body.transactionType,
+//       party_id: req.body.party_id,
+//       factory_id: req.body.factory_id,
+//       vehicle: req.body.vehicle,
+//       vehicle_number: req.body.vehicle_number,
+//       items: (req.body.items || []).map(item => ({
+//         ...item,
+//         quantity: parseInt(item.quantity, 10) || 0,
+//       })),
+//     };
+
+//     // Populate all fields from request body
+//     inventoryFields.forEach(field => {
+//       // For CAP fields, we take the string directly. For others, parse as a number.
+//       if (field.startsWith('cap_')) {
+//         newOrderData[field] = req.body[field] || '0';
+//       } else {
+//         newOrderData[field] = parseInt(req.body[field], 10) || 0;
+//       }
+//     });
+
+//     // ... (customOrderId generation is unchanged) ...
+//     const prefix = newOrderData.transactionType === 'order' ? 'ORD' : 'BILL';
+//     const counterId = newOrderData.transactionType === 'order' ? 'orderId' : 'billId';
+//     const updatedCounter = await Counter.findByIdAndUpdate(counterId, { $inc: { sequence_value: 1 } }, { new: true, upsert: true, session });
+//     if (!updatedCounter) throw new Error(`Counter document with ID '${counterId}' not found.`);
+//     newOrderData.customOrderId = `${prefix}-${String(updatedCounter.sequence_value).padStart(4, '0')}`;
+
+//     const order = new Order(newOrderData);
+//     await order.save({ session });
+
+//     // --- CORRECTED INVENTORY LOGIC ---
+//     if (newOrderData.transactionType === 'order') {
+//       const productionHouse = await ProductionHouse.findOne().session(session);
+//       if (!productionHouse) {
+//         throw new Error('Main Production House not found to update stock.');
+//       }
+
+//       const inventoryUpdate = {};
+      
+//       for (const field of inventoryFields) {
+//         let requestedAmount = 0;
+
+//         // ✅ If it's a CAP field, parse the string to get the total numeric value.
+//         if (field.startsWith('cap_')) {
+//           requestedAmount = parseCalculableString(newOrderData[field]);
+//         } else {
+//           requestedAmount = newOrderData[field];
+//         }
+
+//         if (requestedAmount > 0) {
+//           if (requestedAmount > productionHouse[field]) {
+//             throw new Error(`Insufficient stock for ${field.replace(/_/g, ' ')}.`);
+//           }
+//           inventoryUpdate[field] = -requestedAmount;
+//         }
+//       }
+
+//       if (Object.keys(inventoryUpdate).length > 0) {
+//         await ProductionHouse.updateOne(
+//           { _id: productionHouse._id },
+//           { $inc: inventoryUpdate },
+//           { session }
+//         );
+//       }
+//     }
+//     // --- END OF CORRECTED LOGIC ---
+
+//     await session.commitTransaction();
+//     res.status(201).json({
+//       message: `${newOrderData.transactionType.charAt(0).toUpperCase() + newOrderData.transactionType.slice(1)} created successfully!`,
+//       data: order,
+//     });
+
+//   } catch (error) {
+//     await session.abortTransaction();
+//     console.error('Add Order/Bill Error:', error.message);
+//     res.status(400).json({ message: error.message });
+//   } finally {
+//     session.endSession();
+//   }
+// };
+
+
 exports.addOrder = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    // --- ✅ THE FIX: Correctly build the newOrderData object ---
-    // We now explicitly pull all required fields from the request body
-    // to ensure they are included in the object passed to the Order model.
     const newOrderData = {
       date: req.body.date,
       source: req.body.source,
@@ -44,65 +141,62 @@ exports.addOrder = async (req, res) => {
       })),
     };
 
-    // Add inventory fields, defaulting to 0 if not provided
+    // Populate all fields from request body
     inventoryFields.forEach(field => {
-      newOrderData[field] = parseInt(req.body[field], 10) || 0;
+      if (field.startsWith('cap_')) {
+        newOrderData[field] = req.body[field] || '0';
+      } else {
+        newOrderData[field] = parseInt(req.body[field], 10) || 0;
+      }
     });
 
-
-    // --- Inventory Validation (Unchanged) ---
-    if (newOrderData.transactionType === 'order' && newOrderData.sourceModel === 'ProductionHouse') {
-      const productionHouse = await ProductionHouse.findById(newOrderData.source).session(session);
-      if (!productionHouse) {
-        throw new Error('Source Production House not found.');
-      }
-      for (const field of inventoryFields) {
-        const requestedAmount = newOrderData[field];
-        const availableAmount = productionHouse[field];
-        if (requestedAmount > 0 && requestedAmount > availableAmount) {
-          throw new Error(`Insufficient stock for ${field.replace(/_/g, ' ')}: ${requestedAmount} requested, but only ${availableAmount} available.`);
-        }
-      }
-    }
-
-    // --- Generate Custom Order/Bill ID (Unchanged) ---
     const prefix = newOrderData.transactionType === 'order' ? 'ORD' : 'BILL';
     const counterId = newOrderData.transactionType === 'order' ? 'orderId' : 'billId';
-    
-    const updatedCounter = await Counter.findByIdAndUpdate(
-      counterId,
-      { $inc: { sequence_value: 1 } },
-      { new: true, session }
-    );
-
-    if (!updatedCounter) {
-      throw new Error(`Counter document with ID '${counterId}' not found or failed to update.`);
-    }
+    const updatedCounter = await Counter.findByIdAndUpdate(counterId, { $inc: { sequence_value: 1 } }, { new: true, upsert: true, session });
+    if (!updatedCounter) throw new Error(`Counter document with ID '${counterId}' not found.`);
     newOrderData.customOrderId = `${prefix}-${String(updatedCounter.sequence_value).padStart(4, '0')}`;
 
-
-    // --- Create the Order/Bill Document (Unchanged) ---
+    // Create the order with the raw string for CAP fields
     const order = new Order(newOrderData);
     await order.save({ session });
 
-    // --- Atomically Update Inventory (Unchanged) ---
-    if (newOrderData.transactionType === 'order' && newOrderData.sourceModel === 'ProductionHouse') {
+    // --- CORRECTED INVENTORY LOGIC ---
+    if (newOrderData.transactionType === 'order') {
+      const productionHouse = await ProductionHouse.findOne().session(session);
+      if (!productionHouse) {
+        throw new Error('Main Production House not found to update stock.');
+      }
+
       const inventoryUpdate = {};
-      inventoryFields.forEach(field => {
-        if (newOrderData[field] > 0) {
-          inventoryUpdate[field] = -newOrderData[field];
+      
+      for (const field of inventoryFields) {
+        let requestedAmount = 0;
+
+        // ✅ If it's a CAP field, parse the string to get the total numeric value for calculation.
+        if (field.startsWith('cap_')) {
+          requestedAmount = parseCalculableString(newOrderData[field]);
+        } else {
+          requestedAmount = newOrderData[field];
         }
-      });
+
+        if (requestedAmount > 0) {
+          if (requestedAmount > productionHouse[field]) {
+            throw new Error(`Insufficient stock for ${field.replace(/_/g, ' ')}.`);
+          }
+          inventoryUpdate[field] = -requestedAmount;
+        }
+      }
+
       if (Object.keys(inventoryUpdate).length > 0) {
-        await ProductionHouse.findByIdAndUpdate(
-          newOrderData.source,
+        await ProductionHouse.updateOne(
+          { _id: productionHouse._id },
           { $inc: inventoryUpdate },
           { session }
         );
       }
     }
+    // --- END OF CORRECTED LOGIC ---
 
-    // --- Commit Transaction and Respond (Unchanged) ---
     await session.commitTransaction();
     res.status(201).json({
       message: `${newOrderData.transactionType.charAt(0).toUpperCase() + newOrderData.transactionType.slice(1)} created successfully!`,
@@ -117,6 +211,8 @@ exports.addOrder = async (req, res) => {
     session.endSession();
   }
 };
+
+
 
 /**
  * @desc    Get a list of all orders with filtering and pagination.
@@ -163,15 +259,12 @@ exports.getOrders = async (req, res) => {
         // --- 3. Execute the Database Query ---
         // Find the documents that match the query.
         const orders = await Order.find(query)
-            // Populate linked documents to get their names.
-            .populate('source', 'username productionHouseName name') // Polymorphic populate
+            .populate('source', 'username productionHouseName name')
             .populate('party_id', 'name')
             .populate('factory_id', 'name')
-            // Sort by the main 'date' field in descending order (newest first).
-            .sort({ date: -1 })
+            .sort({ date: -1, createdAt: -1 }) // Primary sort by date, secondary by creation time
             .skip(skip)
             .limit(limit);
-
         // --- 4. Get the Total Count ---
         // Get the total number of documents that match the filter criteria for pagination info.
         const total = await Order.countDocuments(query);
