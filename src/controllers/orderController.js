@@ -624,27 +624,119 @@ exports.findOrderByCustomId = async (req, res) => {
  * @route   PUT /api/orders/:id
  * @access  Private
  */
+// exports.updateOrder = async (req, res) => {
+//   const { id } = req.params;
+//   const updatedData = req.body;
+
+//   // The inventory adjustment logic has been completely removed.
+//   // We are now only updating the fields provided in the request body.
+
+//   try {
+//     // Find the order and update it with the new data in a single, atomic operation.
+//     // Mongoose will only update the fields that are present in the `updatedData` object.
+//     const updatedOrder = await Order.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
+
+//     if (!updatedOrder) {
+//       return res.status(404).json({ message: 'Order not found.' });
+//     }
+
+//     res.status(200).json({ message: 'Transaction updated successfully!', data: updatedOrder });
+
+//   } catch (error) {
+//     console.error('Update Order Error:', error);
+//     res.status(400).json({ message: error.message || 'Failed to update transaction.' });
+//   }
+// };
+
+
+// ✅ --- THIS IS THE CRITICAL FIX ---
+
+
+
+/**
+ * @desc    Update an existing order/bill, including complex inventory adjustments.
+ * @route   PUT /api/orders/:id
+ * @access  Private
+ */
 exports.updateOrder = async (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
 
-  // The inventory adjustment logic has been completely removed.
-  // We are now only updating the fields provided in the request body.
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    // Find the order and update it with the new data in a single, atomic operation.
-    // Mongoose will only update the fields that are present in the `updatedData` object.
-    const updatedOrder = await Order.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
-
-    if (!updatedOrder) {
-      return res.status(404).json({ message: 'Order not found.' });
+    // 1. Find the original order *before* any changes are made.
+    const originalOrder = await Order.findById(id).session(session);
+    if (!originalOrder) {
+      throw new Error('Original transaction not found.');
     }
 
+    // 2. Get the main Production House for inventory updates.
+    const productionHouse = await ProductionHouse.findOne().session(session);
+    if (!productionHouse) {
+      throw new Error('Main Production House not found for inventory update.');
+    }
+
+    // 3. Calculate the *difference* in inventory for each item.
+    const inventoryChanges = {};
+    for (const field of inventoryFields) {
+      let originalAmount = 0;
+      let newAmount = 0;
+
+      // Parse original and new amounts, handling CAP strings correctly.
+      if (field.startsWith('cap_')) {
+        originalAmount = parseCalculableString(originalOrder[field]);
+        newAmount = parseCalculableString(updatedData[field]);
+      } else {
+        originalAmount = originalOrder[field] || 0;
+        newAmount = updatedData[field] || 0;
+      }
+
+      // The change is the old amount minus the new amount.
+      // Example: If old was 10 and new is 8, change is +2 (add 2 back to stock).
+      // Example: If old was 10 and new is 15, change is -5 (remove 5 more from stock).
+      const difference = originalAmount - newAmount;
+      
+      if (difference !== 0) {
+        inventoryChanges[field] = difference;
+      }
+    }
+
+    // 4. Validate if the new changes are possible with current stock.
+    for (const field in inventoryChanges) {
+      const change = inventoryChanges[field];
+      // If we need to remove more stock (change is negative), check if we have enough.
+      if (change < 0) {
+        const currentStock = productionHouse[field];
+        const additionalAmountNeeded = -change; // e.g., -5 becomes 5
+        if (additionalAmountNeeded > currentStock) {
+          throw new Error(`Insufficient stock for ${field.replace(/_/g, ' ')}. Needed: ${additionalAmountNeeded}, Available: ${currentStock}`);
+        }
+      }
+    }
+
+    // 5. Apply the calculated inventory changes to the Production House.
+    if (Object.keys(inventoryChanges).length > 0) {
+      await ProductionHouse.updateOne(
+        { _id: productionHouse._id },
+        { $inc: inventoryChanges }, // Use $inc to apply the positive/negative differences
+        { session }
+      );
+    }
+
+    // 6. Finally, update the order document itself with the new data.
+    const updatedOrder = await Order.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true, session });
+
+    // 7. Commit the transaction.
+    await session.commitTransaction();
     res.status(200).json({ message: 'Transaction updated successfully!', data: updatedOrder });
 
   } catch (error) {
+    await session.abortTransaction();
     console.error('Update Order Error:', error);
     res.status(400).json({ message: error.message || 'Failed to update transaction.' });
+  } finally {
+    session.endSession();
   }
 };
-
