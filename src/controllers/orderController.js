@@ -146,9 +146,11 @@ exports.addOrder = async (req, res) => {
       if (field.startsWith('cap_')) {
         newOrderData[field] = req.body[field] || '0';
       } else {
-        newOrderData[field] = parseInt(req.body[field], 10) || 0;
+        // Use parseFloat instead of parseInt
+        newOrderData[field] = parseFloat(req.body[field]) || 0;
       }
     });
+
 
     const prefix = newOrderData.transactionType === 'order' ? 'ORD' : 'BILL';
     const counterId = newOrderData.transactionType === 'order' ? 'orderId' : 'billId';

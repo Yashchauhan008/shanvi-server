@@ -37,6 +37,8 @@ router.get('/:id/inventory', productionHouseController.getInventoryByProductionH
 // To protect it, you would use: router.post('/:id/inventory', authMiddleware, productionHouseController.addInventory);
 router.post('/:id/inventory', productionHouseController.addInventory);
 
-
+// @route   PUT /api/production-house/:id/inventory
+// @desc    Edit/Set the stock quantities for a Production House
+router.put('/:id/inventory', productionHouseController.editInventory);
 
 module.exports = router;
