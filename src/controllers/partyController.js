@@ -63,7 +63,7 @@ exports.getPartyList = async (req, res) => {
  */
 exports.getAllParties = async (req, res) => {
   try {
-    const parties = await Party.find().populate('factory_ids', 'name');
+    const parties = await Party.find().populate('factory_ids', 'name').sort({ name: 1 });
     res.status(200).json(parties);
   } catch (error) {
     console.error('Error fetching parties:', error);

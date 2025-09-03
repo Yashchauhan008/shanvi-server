@@ -69,7 +69,7 @@ exports.createFactory = async (req, res) => {
 exports.getAllFactories = async (req, res) => {
   try {
     // Populate the 'party_id' field to show the party's name instead of just its ID
-    const factories = await Factory.find().populate('party_id', 'name');
+    const factories = await Factory.find().populate('party_id', 'name').sort({ name: 1 });
     res.status(200).json(factories);
   } catch (error) {
     console.error('Error fetching factories:', error);
