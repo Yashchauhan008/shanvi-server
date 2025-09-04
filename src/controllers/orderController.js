@@ -13,7 +13,7 @@ const parseCalculableString = (inputString) => {
 const inventoryFields = [
   'film_white', 'film_blue', 'patti_roll', 'angle_board_24', 'angle_board_32',
   'angle_board_36', 'angle_board_39', 'angle_board_48', 'cap_hit', 'cap_simple',
-  'firmshit', 'thermocol', 'mettle_angle', 'black_cover', 'packing_clip', 'patiya', 'plypatia'
+  'firmshit', 'thermocol', 'metal_angle', 'black_cover', 'packing_clip', 'patiya', 'plypatia'
 ];
 
 // --- HELPER FUNCTION FOR CUSTOM IDs ---

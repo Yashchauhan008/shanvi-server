@@ -121,10 +121,13 @@ exports.getProductionHouseByID = async (req, res) => {
 
 // --- ADDED THIS ARRAY DEFINITION ---
 const inventoryFields = [
-  'film_white', 'film_blue', 'patti_roll', 'angle_board_24', 'angle_board_32',
-  'angle_board_36', 'angle_board_39', 'angle_board_48', 'cap_hit', 'cap_simple',
-  'firmshit', 'thermocol', 'mettle_angle', 'black_cover', 'packing_clip', 'patiya', 'plypatia'
+  'film_white', 'film_blue', 'patti_roll', 'packing_clip', 'angle_board_24', 
+  'angle_board_32', 'angle_board_36', 'angle_board_39', 'angle_board_48', 
+  'cap_hit', 'cap_simple', 'firmshit', 'thermocol', 'metal_angle', 
+  'black_cover', 'patiya', 'plypatia'
 ];
+
+
 /**
  * @desc    Get all inventory items for a specific Production House
  * @route   GET /api/production-house/:id/inventory
@@ -221,11 +224,63 @@ exports.addInventory = async (req, res) => {
 
 
 
-/**
- * @desc    Directly set/edit the inventory values for a Production House.
- * @route   PUT /api/production-house/:id/inventory
- * @access  Private
- */
+// /**
+//  * @desc    Directly set/edit the inventory values for a Production House.
+//  * @route   PUT /api/production-house/:id/inventory
+//  * @access  Private
+//  */
+// exports.editInventory = async (req, res) => {
+//   const { id } = req.params;
+//   const newInventoryData = req.body;
+
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     return res.status(400).json({ message: 'Invalid Production House ID format.' });
+//   }
+
+//   if (!newInventoryData || Object.keys(newInventoryData).length === 0) {
+//     return res.status(400).json({ message: 'No inventory data provided.' });
+//   }
+
+//   // Prepare the data for MongoDB's $set operator.
+//   // This will overwrite existing values with the new ones provided.
+//   const updateOperation = {};
+//   for (const key in newInventoryData) {
+//     // Ensure the key is a valid inventory field before adding it to the update.
+//     if (inventoryFields.includes(key)) {
+//       const value = parseFloat(newInventoryData[key]);
+//       // Ensure the value is a valid, non-negative number.
+//       updateOperation[key] = !isNaN(value) && value >= 0 ? value : 0;
+//     }
+//   }
+
+//   if (Object.keys(updateOperation).length === 0) {
+//     return res.status(400).json({ message: 'No valid inventory fields to update.' });
+//   }
+
+//   try {
+//     // Find the Production House and use $set to overwrite the inventory values.
+//     const updatedProductionHouse = await ProductionHouse.findByIdAndUpdate(
+//       id,
+//       { $set: updateOperation },
+//       { new: true } // Return the updated document
+//     ).select(inventoryFields.join(' '));
+
+//     if (!updatedProductionHouse) {
+//       return res.status(404).json({ message: 'Production House not found.' });
+//     }
+
+//     res.status(200).json({
+//       message: 'Inventory edited successfully.',
+//       data: updatedProductionHouse,
+//     });
+
+//   } catch (error) {
+//     console.error('Edit Inventory Error:', error);
+//     res.status(500).json({ message: 'Server error while editing inventory.' });
+//   }
+// };
+// // ✅ --- END: NEW CONTROLLER FUNCTION ---
+
 exports.editInventory = async (req, res) => {
   const { id } = req.params;
   const newInventoryData = req.body;
@@ -234,19 +289,12 @@ exports.editInventory = async (req, res) => {
     return res.status(400).json({ message: 'Invalid Production House ID format.' });
   }
 
-  if (!newInventoryData || Object.keys(newInventoryData).length === 0) {
-    return res.status(400).json({ message: 'No inventory data provided.' });
-  }
-
-  // Prepare the data for MongoDB's $set operator.
-  // This will overwrite existing values with the new ones provided.
   const updateOperation = {};
-  for (const key in newInventoryData) {
-    // Ensure the key is a valid inventory field before adding it to the update.
-    if (inventoryFields.includes(key)) {
-      const value = parseFloat(newInventoryData[key]);
-      // Ensure the value is a valid, non-negative number.
-      updateOperation[key] = !isNaN(value) && value >= 0 ? value : 0;
+  for (const schemaKey in newInventoryData) {
+    // The check here ensures only valid fields are processed.
+    if (inventoryFields.includes(schemaKey)) {
+      const value = parseFloat(newInventoryData[schemaKey]);
+      updateOperation[schemaKey] = !isNaN(value) && value >= 0 ? value : 0;
     }
   }
 
@@ -255,11 +303,10 @@ exports.editInventory = async (req, res) => {
   }
 
   try {
-    // Find the Production House and use $set to overwrite the inventory values.
     const updatedProductionHouse = await ProductionHouse.findByIdAndUpdate(
       id,
       { $set: updateOperation },
-      { new: true } // Return the updated document
+      { new: true }
     ).select(inventoryFields.join(' '));
 
     if (!updatedProductionHouse) {
@@ -276,4 +323,3 @@ exports.editInventory = async (req, res) => {
     res.status(500).json({ message: 'Server error while editing inventory.' });
   }
 };
-// ✅ --- END: NEW CONTROLLER FUNCTION ---
