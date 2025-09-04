@@ -22,7 +22,7 @@
 
 //   film_white: { type: Number, default: 0 },
 //   film_blue: { type: Number, default: 0 },
-//   patti_role: { type: Number, default: 0 },
+//   patti_roll: { type: Number, default: 0 },
 //   packing_clip: { type: Number, default: 0 },
 //   angle_board_24: { type: Number, default: 0 },
 //   angle_board_32: { type: Number, default: 0 },
@@ -79,7 +79,7 @@ const OrderSchema = new mongoose.Schema({
   // ✅ All standard inventory items are Number to support floats.
   film_white: { type: Number, default: 0 },
   film_blue: { type: Number, default: 0 },
-  patti_role: { type: Number, default: 0 },
+  patti_roll: { type: Number, default: 0 },
   packing_clip: { type: Number, default: 0 },
   angle_board_24: { type: Number, default: 0 },
   angle_board_32: { type: Number, default: 0 },

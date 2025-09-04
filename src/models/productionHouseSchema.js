@@ -20,7 +20,7 @@ const productionHouseSchema = new mongoose.Schema({
     },
     film_white: { type: Number, default: 0 },
     film_blue: { type: Number, default: 0 },
-    patti_role: { type: Number, default: 0 },
+    patti_roll: { type: Number, default: 0 },
     angle_board_24: { type: Number, default: 0 },
     angle_board_32: { type: Number, default: 0 },
     angle_board_36: { type: Number, default: 0 },

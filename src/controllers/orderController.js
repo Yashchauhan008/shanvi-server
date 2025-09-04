@@ -11,7 +11,7 @@ const parseCalculableString = (inputString) => {
   }, 0);
 };
 const inventoryFields = [
-  'film_white', 'film_blue', 'patti_role', 'angle_board_24', 'angle_board_32',
+  'film_white', 'film_blue', 'patti_roll', 'angle_board_24', 'angle_board_32',
   'angle_board_36', 'angle_board_39', 'angle_board_48', 'cap_hit', 'cap_simple',
   'firmshit', 'thermocol', 'mettle_angle', 'black_cover', 'packing_clip', 'patiya', 'plypatia'
 ];
@@ -508,6 +508,75 @@ exports.getOrderById = async (req, res) => {
 
 // Add this function to your existing orderController.js
 
+// /**
+//  * @desc    Soft delete an order and restore inventory if applicable
+//  * @route   DELETE /api/orders/:id
+//  * @access  Private
+//  */
+// exports.deleteOrder = async (req, res) => {
+//   const { id } = req.params;
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+
+//   try {
+//     // 1. Find the order within the transaction
+//     const order = await Order.findById(id).session(session);
+//     if (!order) {
+//       await session.abortTransaction();
+//       session.endSession();
+//       return res.status(404).json({ message: 'Order not found.' });
+//     }
+
+//     // If already disabled, do nothing
+//     if (order.disabled) {
+//       await session.abortTransaction();
+//       session.endSession();
+//       return res.status(400).json({ message: 'This order has already been deleted.' });
+//     }
+
+//     // 2. Check if the order was from a ProductionHouse and affects inventory
+//     if (order.sourceModel === 'ProductionHouse' && order.transactionType === 'order') {
+//       const productionHouse = await ProductionHouse.findById(order.source).session(session);
+//       if (!productionHouse) {
+//         throw new Error('Source Production House not found for inventory restoration.');
+//       }
+
+//       // Create the update object to add inventory back
+//       const inventoryToRestore = {};
+//       inventoryFields.forEach(field => {
+//         if (order[field] > 0) {
+//           inventoryToRestore[field] = order[field];
+//         }
+//       });
+
+//       // Use $inc to add the values back to the production house's inventory
+//       if (Object.keys(inventoryToRestore).length > 0) {
+//         await ProductionHouse.updateOne(
+//           { _id: order.source },
+//           { $inc: inventoryToRestore },
+//           { session }
+//         );
+//       }
+//     }
+
+//     // 3. Mark the order as disabled (soft delete)
+//     order.disabled = true;
+//     await order.save({ session });
+
+//     // 4. Commit the transaction
+//     await session.commitTransaction();
+//     session.endSession();
+
+//     res.status(200).json({ message: 'Order deleted successfully and inventory restored.' });
+
+//   } catch (error) {
+//     await session.abortTransaction();
+//     session.endSession();
+//     console.error('Delete Order Error:', error);
+//     res.status(500).json({ message: 'Failed to delete order due to a server error.' });
+//   }
+// };
+
 /**
  * @desc    Soft delete an order and restore inventory if applicable
  * @route   DELETE /api/orders/:id
@@ -519,7 +588,6 @@ exports.deleteOrder = async (req, res) => {
   session.startTransaction();
 
   try {
-    // 1. Find the order within the transaction
     const order = await Order.findById(id).session(session);
     if (!order) {
       await session.abortTransaction();
@@ -527,29 +595,39 @@ exports.deleteOrder = async (req, res) => {
       return res.status(404).json({ message: 'Order not found.' });
     }
 
-    // If already disabled, do nothing
     if (order.disabled) {
       await session.abortTransaction();
       session.endSession();
       return res.status(400).json({ message: 'This order has already been deleted.' });
     }
 
-    // 2. Check if the order was from a ProductionHouse and affects inventory
     if (order.sourceModel === 'ProductionHouse' && order.transactionType === 'order') {
       const productionHouse = await ProductionHouse.findById(order.source).session(session);
       if (!productionHouse) {
         throw new Error('Source Production House not found for inventory restoration.');
       }
 
-      // Create the update object to add inventory back
       const inventoryToRestore = {};
-      inventoryFields.forEach(field => {
-        if (order[field] > 0) {
-          inventoryToRestore[field] = order[field];
+      
+      // ✅ --- THIS IS THE FIX ---
+      // The loop now correctly uses the parser for all fields, ensuring that
+      // string values like "10+5" are calculated correctly before being restored.
+      for (const field of inventoryFields) {
+        let amountToRestore = 0;
+        
+        // Use the parser for CAP fields, and parseFloat for others.
+        if (field.startsWith('cap_')) {
+          amountToRestore = parseCalculableString(order[field]);
+        } else {
+          amountToRestore = parseFloat(order[field]) || 0;
         }
-      });
 
-      // Use $inc to add the values back to the production house's inventory
+        if (amountToRestore > 0) {
+          inventoryToRestore[field] = amountToRestore;
+        }
+      }
+      // ✅ --- END OF FIX ---
+
       if (Object.keys(inventoryToRestore).length > 0) {
         await ProductionHouse.updateOne(
           { _id: order.source },
@@ -559,11 +637,9 @@ exports.deleteOrder = async (req, res) => {
       }
     }
 
-    // 3. Mark the order as disabled (soft delete)
     order.disabled = true;
     await order.save({ session });
 
-    // 4. Commit the transaction
     await session.commitTransaction();
     session.endSession();
 
@@ -576,8 +652,6 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete order due to a server error.' });
   }
 };
-
-
 
 
 
