@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const parseCalculableString = (inputString) => {
   if (!inputString || typeof inputString !== 'string') return 0;
   return inputString.split('+').reduce((sum, part) => {
-    const num = parseFloat(part.trim());
+    const num = parseInt(part.trim(), 10);
     return sum + (isNaN(num) ? 0 : num);
   }, 0);
 };
@@ -50,22 +50,21 @@ async function getNextSequenceValue(sequenceName) {
 
 //     // Populate all fields from request body
 //     inventoryFields.forEach(field => {
+//       // For CAP fields, we take the string directly. For others, parse as a number.
 //       if (field.startsWith('cap_')) {
 //         newOrderData[field] = req.body[field] || '0';
 //       } else {
-//         // Use parseFloat instead of parseInt
-//         newOrderData[field] = parseFloat(req.body[field]) || 0;
+//         newOrderData[field] = parseInt(req.body[field], 10) || 0;
 //       }
 //     });
 
-
+//     // ... (customOrderId generation is unchanged) ...
 //     const prefix = newOrderData.transactionType === 'order' ? 'ORD' : 'BILL';
 //     const counterId = newOrderData.transactionType === 'order' ? 'orderId' : 'billId';
 //     const updatedCounter = await Counter.findByIdAndUpdate(counterId, { $inc: { sequence_value: 1 } }, { new: true, upsert: true, session });
 //     if (!updatedCounter) throw new Error(`Counter document with ID '${counterId}' not found.`);
 //     newOrderData.customOrderId = `${prefix}-${String(updatedCounter.sequence_value).padStart(4, '0')}`;
 
-//     // Create the order with the raw string for CAP fields
 //     const order = new Order(newOrderData);
 //     await order.save({ session });
 
@@ -81,7 +80,7 @@ async function getNextSequenceValue(sequenceName) {
 //       for (const field of inventoryFields) {
 //         let requestedAmount = 0;
 
-//         // ✅ If it's a CAP field, parse the string to get the total numeric value for calculation.
+//         // ✅ If it's a CAP field, parse the string to get the total numeric value.
 //         if (field.startsWith('cap_')) {
 //           requestedAmount = parseCalculableString(newOrderData[field]);
 //         } else {
@@ -127,7 +126,7 @@ exports.addOrder = async (req, res) => {
   session.startTransaction();
 
   try {
-    let newOrderData = {
+    const newOrderData = {
       date: req.body.date,
       source: req.body.source,
       sourceModel: req.body.sourceModel,
@@ -142,37 +141,44 @@ exports.addOrder = async (req, res) => {
       })),
     };
 
-    // Populate all inventory fields with correct types
+    // Populate all fields from request body
     inventoryFields.forEach(field => {
-      const value = req.body[field];
-      if (value !== undefined && String(value).trim() !== '') {
-        if (field.startsWith('cap_')) {
-          newOrderData[field] = String(value); // Store as string
-        } else {
-          newOrderData[field] = parseFloat(value) || 0; // Store as number
-        }
+      if (field.startsWith('cap_')) {
+        newOrderData[field] = req.body[field] || '0';
+      } else {
+        // Use parseFloat instead of parseInt
+        newOrderData[field] = parseFloat(req.body[field]) || 0;
       }
     });
+
 
     const prefix = newOrderData.transactionType === 'order' ? 'ORD' : 'BILL';
     const counterId = newOrderData.transactionType === 'order' ? 'orderId' : 'billId';
     const updatedCounter = await Counter.findByIdAndUpdate(counterId, { $inc: { sequence_value: 1 } }, { new: true, upsert: true, session });
+    if (!updatedCounter) throw new Error(`Counter document with ID '${counterId}' not found.`);
     newOrderData.customOrderId = `${prefix}-${String(updatedCounter.sequence_value).padStart(4, '0')}`;
 
+    // Create the order with the raw string for CAP fields
     const order = new Order(newOrderData);
     await order.save({ session });
 
+    // --- CORRECTED INVENTORY LOGIC ---
     if (newOrderData.transactionType === 'order') {
       const productionHouse = await ProductionHouse.findOne().session(session);
-      if (!productionHouse) throw new Error('Main Production House not found.');
+      if (!productionHouse) {
+        throw new Error('Main Production House not found to update stock.');
+      }
 
       const inventoryUpdate = {};
+      
       for (const field of inventoryFields) {
         let requestedAmount = 0;
+
+        // ✅ If it's a CAP field, parse the string to get the total numeric value for calculation.
         if (field.startsWith('cap_')) {
           requestedAmount = parseCalculableString(newOrderData[field]);
         } else {
-          requestedAmount = newOrderData[field] || 0;
+          requestedAmount = newOrderData[field];
         }
 
         if (requestedAmount > 0) {
@@ -191,6 +197,7 @@ exports.addOrder = async (req, res) => {
         );
       }
     }
+    // --- END OF CORRECTED LOGIC ---
 
     await session.commitTransaction();
     res.status(201).json({
@@ -200,12 +207,13 @@ exports.addOrder = async (req, res) => {
 
   } catch (error) {
     await session.abortTransaction();
-    console.error('Add Order/Bill Error:', error);
+    console.error('Add Order/Bill Error:', error.message);
     res.status(400).json({ message: error.message });
   } finally {
     session.endSession();
   }
 };
+
 
 
 /**
@@ -647,94 +655,11 @@ exports.findOrderByCustomId = async (req, res) => {
 
 
 
-// /**
-//  * @desc    Update an existing order/bill, including complex inventory adjustments.
-//  * @route   PUT /api/orders/:id
-//  * @access  Private
-//  */
-// exports.updateOrder = async (req, res) => {
-//   const { id } = req.params;
-//   const updatedData = req.body;
-
-//   const session = await mongoose.startSession();
-//   session.startTransaction();
-
-//   try {
-//     // 1. Find the original order *before* any changes are made.
-//     const originalOrder = await Order.findById(id).session(session);
-//     if (!originalOrder) {
-//       throw new Error('Original transaction not found.');
-//     }
-
-//     // 2. Get the main Production House for inventory updates.
-//     const productionHouse = await ProductionHouse.findOne().session(session);
-//     if (!productionHouse) {
-//       throw new Error('Main Production House not found for inventory update.');
-//     }
-
-//     // 3. Calculate the *difference* in inventory for each item.
-//     const inventoryChanges = {};
-//     for (const field of inventoryFields) {
-//       let originalAmount = 0;
-//       let newAmount = 0;
-
-//       // Parse original and new amounts, handling CAP strings correctly.
-//       if (field.startsWith('cap_')) {
-//         originalAmount = parseCalculableString(originalOrder[field]);
-//         newAmount = parseCalculableString(updatedData[field]);
-//       } else {
-//         originalAmount = originalOrder[field] || 0;
-//         newAmount = updatedData[field] || 0;
-//       }
-
-//       // The change is the old amount minus the new amount.
-//       // Example: If old was 10 and new is 8, change is +2 (add 2 back to stock).
-//       // Example: If old was 10 and new is 15, change is -5 (remove 5 more from stock).
-//       const difference = originalAmount - newAmount;
-      
-//       if (difference !== 0) {
-//         inventoryChanges[field] = difference;
-//       }
-//     }
-
-//     // 4. Validate if the new changes are possible with current stock.
-//     for (const field in inventoryChanges) {
-//       const change = inventoryChanges[field];
-//       // If we need to remove more stock (change is negative), check if we have enough.
-//       if (change < 0) {
-//         const currentStock = productionHouse[field];
-//         const additionalAmountNeeded = -change; // e.g., -5 becomes 5
-//         if (additionalAmountNeeded > currentStock) {
-//           throw new Error(`Insufficient stock for ${field.replace(/_/g, ' ')}. Needed: ${additionalAmountNeeded}, Available: ${currentStock}`);
-//         }
-//       }
-//     }
-
-//     // 5. Apply the calculated inventory changes to the Production House.
-//     if (Object.keys(inventoryChanges).length > 0) {
-//       await ProductionHouse.updateOne(
-//         { _id: productionHouse._id },
-//         { $inc: inventoryChanges }, // Use $inc to apply the positive/negative differences
-//         { session }
-//       );
-//     }
-
-//     // 6. Finally, update the order document itself with the new data.
-//     const updatedOrder = await Order.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true, session });
-
-//     // 7. Commit the transaction.
-//     await session.commitTransaction();
-//     res.status(200).json({ message: 'Transaction updated successfully!', data: updatedOrder });
-
-//   } catch (error) {
-//     await session.abortTransaction();
-//     console.error('Update Order Error:', error);
-//     res.status(400).json({ message: error.message || 'Failed to update transaction.' });
-//   } finally {
-//     session.endSession();
-//   }
-// };
-
+/**
+ * @desc    Update an existing order/bill, including complex inventory adjustments.
+ * @route   PUT /api/orders/:id
+ * @access  Private
+ */
 exports.updateOrder = async (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
@@ -743,52 +668,69 @@ exports.updateOrder = async (req, res) => {
   session.startTransaction();
 
   try {
+    // 1. Find the original order *before* any changes are made.
     const originalOrder = await Order.findById(id).session(session);
-    if (!originalOrder) throw new Error('Original transaction not found.');
+    if (!originalOrder) {
+      throw new Error('Original transaction not found.');
+    }
 
+    // 2. Get the main Production House for inventory updates.
     const productionHouse = await ProductionHouse.findOne().session(session);
-    if (!productionHouse) throw new Error('Main Production House not found for inventory update.');
+    if (!productionHouse) {
+      throw new Error('Main Production House not found for inventory update.');
+    }
 
+    // 3. Calculate the *difference* in inventory for each item.
     const inventoryChanges = {};
     for (const field of inventoryFields) {
       let originalAmount = 0;
       let newAmount = 0;
 
+      // Parse original and new amounts, handling CAP strings correctly.
       if (field.startsWith('cap_')) {
         originalAmount = parseCalculableString(originalOrder[field]);
         newAmount = parseCalculableString(updatedData[field]);
       } else {
         originalAmount = originalOrder[field] || 0;
-        newAmount = parseFloat(updatedData[field]) || 0;
+        newAmount = updatedData[field] || 0;
       }
-      
+
+      // The change is the old amount minus the new amount.
+      // Example: If old was 10 and new is 8, change is +2 (add 2 back to stock).
+      // Example: If old was 10 and new is 15, change is -5 (remove 5 more from stock).
       const difference = originalAmount - newAmount;
+      
       if (difference !== 0) {
         inventoryChanges[field] = difference;
       }
     }
 
+    // 4. Validate if the new changes are possible with current stock.
     for (const field in inventoryChanges) {
       const change = inventoryChanges[field];
+      // If we need to remove more stock (change is negative), check if we have enough.
       if (change < 0) {
         const currentStock = productionHouse[field];
-        const additionalAmountNeeded = -change;
+        const additionalAmountNeeded = -change; // e.g., -5 becomes 5
         if (additionalAmountNeeded > currentStock) {
           throw new Error(`Insufficient stock for ${field.replace(/_/g, ' ')}. Needed: ${additionalAmountNeeded}, Available: ${currentStock}`);
         }
       }
     }
 
+    // 5. Apply the calculated inventory changes to the Production House.
     if (Object.keys(inventoryChanges).length > 0) {
       await ProductionHouse.updateOne(
         { _id: productionHouse._id },
-        { $inc: inventoryChanges },
+        { $inc: inventoryChanges }, // Use $inc to apply the positive/negative differences
         { session }
       );
     }
 
+    // 6. Finally, update the order document itself with the new data.
     const updatedOrder = await Order.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true, session });
 
+    // 7. Commit the transaction.
     await session.commitTransaction();
     res.status(200).json({ message: 'Transaction updated successfully!', data: updatedOrder });
 
