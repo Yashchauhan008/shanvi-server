@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 
 const parseCalculableString = (inputString) => {
   if (!inputString || typeof inputString !== 'string') return 0;
+  // Splits the string by '+' and sums the parts, ensuring they are parsed as numbers.
   return inputString.split('+').reduce((sum, part) => {
-    const num = parseInt(part.trim(), 10);
+    const num = parseFloat(part.trim()); // Use parseFloat to handle potential decimals
     return sum + (isNaN(num) ? 0 : num);
   }, 0);
 };
@@ -552,8 +553,19 @@ exports.deleteOrder = async (req, res) => {
       // Create the update object to add inventory back
       const inventoryToRestore = {};
       inventoryFields.forEach(field => {
-        if (order[field] > 0) {
-          inventoryToRestore[field] = order[field];
+        let amountToRestore = 0;
+        
+        // If the field is a 'cap' field, parse its string value.
+        if (field.startsWith('cap_')) {
+          amountToRestore = parseCalculableString(order[field]);
+        } else {
+          // Otherwise, use its direct numeric value.
+          amountToRestore = order[field] || 0;
+        }
+
+        // Only add to the update object if there's a value greater than 0.
+        if (amountToRestore > 0) {
+          inventoryToRestore[field] = amountToRestore;
         }
       });
 
