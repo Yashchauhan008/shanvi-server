@@ -121,10 +121,11 @@ exports.getProductionHouseByID = async (req, res) => {
 
 // --- ADDED THIS ARRAY DEFINITION ---
 const inventoryFields = [
-  'film_white', 'film_blue', 'patti_roll', 'angle_board_24', 'angle_board_32',
+  'film_white', 'film_blue', 'patti_role', 'angle_board_24', 'angle_board_32',
   'angle_board_36', 'angle_board_39', 'angle_board_48', 'cap_hit', 'cap_simple',
   'firmshit', 'thermocol', 'mettle_angle', 'black_cover', 'packing_clip', 'patiya', 'plypatia'
 ];
+
 /**
  * @desc    Get all inventory items for a specific Production House
  * @route   GET /api/production-house/:id/inventory
@@ -165,7 +166,7 @@ exports.getInventoryByProductionHouseId = async (req, res) => {
  */
 exports.addInventory = async (req, res) => {
   const { id } = req.params;
-  const incomingStock = req.body; // e.g., { "Film White": 100, "Patti roll": 50 }
+  const incomingStock = req.body; // e.g., { "Film White": 100, "Patti Role": 50 }
 
   // 1. Validate the Production House ID
   if (!mongoose.Types.ObjectId.isValid(id)) {
