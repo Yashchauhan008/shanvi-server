@@ -1,0 +1,52 @@
+2025-09-12 01:25:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:25:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:25:21 INFO: Associate Company created: yash (ID: 68c32929713103d05bf5a05a)
+2025-09-12 01:25:21 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:29:51 INFO: Associate Company updated: yashop (ID: 68c32929713103d05bf5a05a)
+2025-09-12 01:29:51 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:29:55 INFO: Associate Company deleted: yashop (ID: 68c32929713103d05bf5a05a)
+2025-09-12 01:29:56 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:43:04 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:43:04 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:43:04 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 01:43:04 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:43:04 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 01:43:04 INFO: Successfully retrieved all factories.
+2025-09-12 01:43:04 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:43:04 INFO: Successfully retrieved all factories.
+2025-09-12 01:43:04 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:43:20 WARN: Login failed: Invalid password for username 'shanvi'.
+2025-09-12 01:43:31 WARN: Login failed: Invalid password for username 'shanvi'.
+2025-09-12 01:43:38 INFO: User logged in successfully: 'shanvi' (ID: 68890d17fd317e92452edecd)
+2025-09-12 01:43:38 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:43:38 INFO: Successfully retrieved pallet statistics.
+2025-09-12 01:43:38 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:43:38 INFO: Successfully retrieved pallet statistics.
+2025-09-12 01:46:16 INFO: Inventory added for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:46:19 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:46:19 INFO: Successfully retrieved pallet statistics.
+2025-09-12 01:46:40 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:40 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:41 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:41 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:42 INFO: Retrieved 50 of 56 orders for page 1
+2025-09-12 01:46:42 INFO: Retrieved 50 of 56 orders for page 1
+2025-09-12 01:46:50 INFO: Successfully retrieved pallet statistics.
+2025-09-12 01:46:50 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:46:50 INFO: Successfully retrieved pallet statistics.
+2025-09-12 01:46:50 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:46:54 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:46:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:54 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:46:54 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 01:46:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:54 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 01:46:54 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:46:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:55 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 01:46:55 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 01:46:55 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 01:46:55 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 01:47:31 INFO: Transaction created: ORD-0084
+2025-09-12 01:47:32 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-12 01:47:32 INFO: Successfully retrieved pallet statistics.

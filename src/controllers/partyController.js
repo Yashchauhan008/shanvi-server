@@ -1,5 +1,153 @@
-const Party = require('../models/partySchema'); // Ensure path is correct
+// const Party = require('../models/partySchema'); // Ensure path is correct
+// const mongoose = require('mongoose');
+
+// /**
+//  * @desc    Create a new party
+//  * @route   POST /api/parties
+//  * @access  Private
+//  */
+// exports.createParty = async (req, res) => {
+//   // Only the 'name' is expected from the request body.
+//   const { name } = req.body;
+
+//   // 1. Validation: Ensure name is provided.
+//   if (!name || name.trim() === '') {
+//     return res.status(400).json({ message: 'Party name is required and cannot be empty.' });
+//   }
+
+//   try {
+//     // 2. Check for duplicates to maintain data integrity.
+//     const existingParty = await Party.findOne({ name });
+//     if (existingParty) {
+//       return res.status(409).json({ message: `A party with the name '${name}' already exists.` }); // 409 Conflict
+//     }
+
+//     // 3. Create a new party instance.
+//     // The 'factory_ids' field will automatically be an empty array by default.
+//     const newParty = new Party({
+//       name,
+//     });
+
+//     // 4. Save the new party to the database.
+//     await newParty.save();
+
+//     // 5. Respond with the newly created party data.
+//     res.status(201).json({ message: 'Party created successfully', data: newParty });
+
+//   } catch (error) {
+//     console.error('Error creating party:', error);
+//     res.status(500).json({ error: 'Failed to create party due to a server error.' });
+//   }
+// };
+
+// /**
+//  * @desc    Get a lightweight list of all parties (id and name only) for dropdowns
+//  * @route   GET /api/parties/list
+//  * @access  Private
+//  */
+// exports.getPartyList = async (req, res) => {
+//   try {
+//     // .select('_id name') tells MongoDB to only return these two fields.
+//     const partyList = await Party.find().select('_id name').sort({ name: 1 });
+//     res.status(200).json(partyList);
+//   } catch (error) {
+//     console.error('Error fetching party list:', error);
+//     res.status(500).json({ error: 'Failed to fetch party list.' });
+//   }
+// };
+
+// /**
+//  * @desc    Get all parties, optionally populating factory details
+//  * @route   GET /api/parties
+//  * @access  Private
+//  */
+// exports.getAllParties = async (req, res) => {
+//   try {
+//     const parties = await Party.find().populate('factory_ids', 'name');
+//     res.status(200).json(parties);
+//   } catch (error) {
+//     console.error('Error fetching parties:', error);
+//     res.status(500).json({ error: 'Failed to fetch parties.' });
+//   }
+// };
+
+// /**
+//  * @desc    Get a single party by its ID
+//  * @route   GET /api/parties/:id
+//  * @access  Private
+//  */
+// exports.getPartyById = async (req, res) => {
+//     try {
+//         const party = await Party.findById(req.params.id).populate('factory_ids', 'name');
+//         if (!party) {
+//             return res.status(404).json({ message: 'Party not found.' });
+//         }
+//         res.status(200).json(party);
+//     } catch (error) {
+//         console.error('Error fetching party by ID:', error);
+//         res.status(500).json({ error: 'Failed to fetch party.' });
+//     }
+// };
+
+// /**
+//  * @desc    Update an existing party (can be used to add/remove factory_ids)
+//  * @route   PUT /api/parties/:id
+//  * @access  Private
+//  */
+// exports.updateParty = async (req, res) => {
+//   const { id } = req.params;
+//   const { name, factory_ids } = req.body; // Update can still modify name and factories
+
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return res.status(400).json({ message: 'Invalid party ID format.' });
+//   }
+
+//   try {
+//     const updatedParty = await Party.findByIdAndUpdate(
+//       id,
+//       { name, factory_ids },
+//       { new: true, runValidators: true }
+//     );
+
+//     if (!updatedParty) {
+//       return res.status(404).json({ error: 'Party not found.' });
+//     }
+
+//     res.status(200).json({ message: 'Party updated successfully', data: updatedParty });
+//   } catch (error) {
+//     console.error('Error updating party:', error);
+//     res.status(500).json({ error: 'Failed to update party.' });
+//   }
+// };
+
+// /**
+//  * @desc    Delete a party
+//  * @route   DELETE /api/parties/:id
+//  * @access  Private
+//  */
+// exports.deleteParty = async (req, res) => {
+//   const { id } = req.params;
+
+//    if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return res.status(400).json({ message: 'Invalid party ID format.' });
+//   }
+
+//   try {
+//     const deletedParty = await Party.findByIdAndDelete(id);
+//     if (!deletedParty) {
+//       return res.status(404).json({ error: 'Party not found.' });
+//     }
+//     res.status(200).json({ message: 'Party deleted successfully.' });
+//   } catch (error) {
+//     console.error('Error deleting party:', error);
+//     res.status(500).json({ error: 'Failed to delete party.' });
+//   }
+// };
+
+
+const Party = require('../models/partySchema');
 const mongoose = require('mongoose');
+const logger = require('../logger'); // 1. Import the logger
 
 /**
  * @desc    Create a new party
@@ -7,35 +155,32 @@ const mongoose = require('mongoose');
  * @access  Private
  */
 exports.createParty = async (req, res) => {
-  // Only the 'name' is expected from the request body.
   const { name } = req.body;
 
-  // 1. Validation: Ensure name is provided.
   if (!name || name.trim() === '') {
     return res.status(400).json({ message: 'Party name is required and cannot be empty.' });
   }
 
   try {
-    // 2. Check for duplicates to maintain data integrity.
     const existingParty = await Party.findOne({ name });
     if (existingParty) {
-      return res.status(409).json({ message: `A party with the name '${name}' already exists.` }); // 409 Conflict
+      // --- Logging ---
+      logger.warn(`Attempted to create duplicate Party: '${name}'`);
+      return res.status(409).json({ message: `A party with the name '${name}' already exists.` });
     }
 
-    // 3. Create a new party instance.
-    // The 'factory_ids' field will automatically be an empty array by default.
-    const newParty = new Party({
-      name,
-    });
-
-    // 4. Save the new party to the database.
+    const newParty = new Party({ name });
     await newParty.save();
 
-    // 5. Respond with the newly created party data.
+    // --- Logging ---
+    logger.info(`Party created: '${newParty.name}' (ID: ${newParty._id})`);
+
     res.status(201).json({ message: 'Party created successfully', data: newParty });
 
   } catch (error) {
-    console.error('Error creating party:', error);
+    // --- Logging ---
+    logger.error(`Failed to create party '${name}': ${error.message}`);
+    
     res.status(500).json({ error: 'Failed to create party due to a server error.' });
   }
 };
@@ -47,11 +192,16 @@ exports.createParty = async (req, res) => {
  */
 exports.getPartyList = async (req, res) => {
   try {
-    // .select('_id name') tells MongoDB to only return these two fields.
     const partyList = await Party.find().select('_id name').sort({ name: 1 });
+    
+    // --- Logging ---
+    logger.info('Successfully retrieved party list for dropdowns.');
+    
     res.status(200).json(partyList);
   } catch (error) {
-    console.error('Error fetching party list:', error);
+    // --- Logging ---
+    logger.error(`Failed to fetch party list: ${error.message}`);
+    
     res.status(500).json({ error: 'Failed to fetch party list.' });
   }
 };
@@ -64,9 +214,15 @@ exports.getPartyList = async (req, res) => {
 exports.getAllParties = async (req, res) => {
   try {
     const parties = await Party.find().populate('factory_ids', 'name');
+    
+    // --- Logging ---
+    logger.info('Successfully retrieved all parties with factory details.');
+    
     res.status(200).json(parties);
   } catch (error) {
-    console.error('Error fetching parties:', error);
+    // --- Logging ---
+    logger.error(`Failed to fetch all parties: ${error.message}`);
+    
     res.status(500).json({ error: 'Failed to fetch parties.' });
   }
 };
@@ -80,23 +236,31 @@ exports.getPartyById = async (req, res) => {
     try {
         const party = await Party.findById(req.params.id).populate('factory_ids', 'name');
         if (!party) {
+            // --- Logging ---
+            logger.warn(`Party not found for ID: ${req.params.id}`);
             return res.status(404).json({ message: 'Party not found.' });
         }
+        
+        // --- Logging ---
+        logger.info(`Successfully retrieved party: ${party.name} (ID: ${req.params.id})`);
+        
         res.status(200).json(party);
     } catch (error) {
-        console.error('Error fetching party by ID:', error);
+        // --- Logging ---
+        logger.error(`Failed to fetch party with ID ${req.params.id}: ${error.message}`);
+        
         res.status(500).json({ error: 'Failed to fetch party.' });
     }
 };
 
 /**
- * @desc    Update an existing party (can be used to add/remove factory_ids)
+ * @desc    Update an existing party
  * @route   PUT /api/parties/:id
  * @access  Private
  */
 exports.updateParty = async (req, res) => {
   const { id } = req.params;
-  const { name, factory_ids } = req.body; // Update can still modify name and factories
+  const { name, factory_ids } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid party ID format.' });
@@ -110,12 +274,19 @@ exports.updateParty = async (req, res) => {
     );
 
     if (!updatedParty) {
+      // --- Logging ---
+      logger.warn(`Attempted to update non-existent Party with ID: ${id}`);
       return res.status(404).json({ error: 'Party not found.' });
     }
 
+    // --- Logging ---
+    logger.info(`Party updated: ${updatedParty.name} (ID: ${id})`);
+
     res.status(200).json({ message: 'Party updated successfully', data: updatedParty });
   } catch (error) {
-    console.error('Error updating party:', error);
+    // --- Logging ---
+    logger.error(`Failed to update party with ID ${id}: ${error.message}`, { requestBody: req.body });
+    
     res.status(500).json({ error: 'Failed to update party.' });
   }
 };
@@ -135,11 +306,19 @@ exports.deleteParty = async (req, res) => {
   try {
     const deletedParty = await Party.findByIdAndDelete(id);
     if (!deletedParty) {
+      // --- Logging ---
+      logger.warn(`Attempted to delete non-existent Party with ID: ${id}`);
       return res.status(404).json({ error: 'Party not found.' });
     }
+    
+    // --- Logging ---
+    logger.info(`Party deleted: ${deletedParty.name} (ID: ${id})`);
+
     res.status(200).json({ message: 'Party deleted successfully.' });
   } catch (error) {
-    console.error('Error deleting party:', error);
+    // --- Logging ---
+    logger.error(`Failed to delete party with ID ${id}: ${error.message}`);
+    
     res.status(500).json({ error: 'Failed to delete party.' });
   }
 };
