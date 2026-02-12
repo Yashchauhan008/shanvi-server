@@ -50,3 +50,508 @@
 2025-09-12 01:47:31 INFO: Transaction created: ORD-0084
 2025-09-12 01:47:32 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
 2025-09-12 01:47:32 INFO: Successfully retrieved pallet statistics.
+2025-09-12 02:05:30 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 02:05:30 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 02:05:30 INFO: Retrieved 50 of 57 orders for page 1
+2025-09-12 02:05:31 INFO: Retrieved 50 of 57 orders for page 1
+2025-09-12 02:07:44 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 02:07:44 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 02:07:44 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 02:07:44 INFO: Successfully retrieved all pallet sizes.
+2025-09-12 02:07:44 INFO: Successfully retrieved all factories.
+2025-09-12 02:07:44 INFO: Successfully retrieved all parties with factory details.
+2025-09-12 02:07:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-12 02:07:44 INFO: Successfully retrieved all factories.
+2025-09-12 02:07:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:38:52 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-22 11:38:52 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:38:52 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-22 11:38:52 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:38:54 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:38:54 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:38:54 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:38:54 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:38:54 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:38:54 INFO: Successfully retrieved all factories.
+2025-09-22 11:38:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:38:54 INFO: Successfully retrieved all factories.
+2025-09-22 11:38:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:05 INFO: User logged in successfully: 'shanvi' (ID: 68890d17fd317e92452edecd)
+2025-09-22 11:39:05 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:39:05 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 11:39:05 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 11:39:05 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:39:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:15 INFO: Retrieved 50 of 57 orders for page 1
+2025-09-22 11:39:16 INFO: Retrieved 50 of 57 orders for page 1
+2025-09-22 11:39:18 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:18 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:19 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:19 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:39:19 INFO: Retrieved 50 of 57 orders for page 1
+2025-09-22 11:39:19 INFO: Retrieved 50 of 57 orders for page 1
+2025-09-22 11:39:20 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:39:20 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 11:39:20 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 11:39:20 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:45:21 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:45:21 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:45:23 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 11:45:23 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 11:45:23 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:45:23 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:45:23 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 11:45:24 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 11:46:16 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:46:17 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:46:22 INFO: Successfully retrieved party: Mega Dubai (ID: 68890d8ffd317e92452edee4)
+2025-09-22 11:46:22 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:46:22 INFO: Successfully retrieved party: Mega Dubai (ID: 68890d8ffd317e92452edee4)
+2025-09-22 11:46:22 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:46:22 INFO: Retrieved 6 of 6 orders for page 1
+2025-09-22 11:46:22 INFO: Retrieved 6 of 6 orders for page 1
+2025-09-22 11:46:40 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:46:40 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:46:41 INFO: Successfully retrieved party: ANSH EXIM (ID: 68890d6bfd317e92452eded8)
+2025-09-22 11:46:41 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:46:42 INFO: Successfully retrieved party: ANSH EXIM (ID: 68890d6bfd317e92452eded8)
+2025-09-22 11:46:42 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:46:42 INFO: Retrieved 19 of 19 orders for page 1
+2025-09-22 11:46:42 INFO: Retrieved 19 of 19 orders for page 1
+2025-09-22 11:53:46 INFO: Successfully retrieved party: ANSH EXIM (ID: 68890d6bfd317e92452eded8)
+2025-09-22 11:53:46 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:53:46 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:53:46 INFO: Retrieved 19 of 19 orders for page 1
+2025-09-22 11:53:46 INFO: Retrieved 19 of 19 orders for page 1
+2025-09-22 11:54:01 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:54:01 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:01 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:54:01 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:01 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:54:01 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:54:15 INFO: Transaction created: BILL-0017
+2025-09-22 11:54:17 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:54:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:50 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:54:50 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:54:51 INFO: Successfully retrieved party list for dropdowns.
+2025-09-22 11:54:51 INFO: Successfully retrieved party list for dropdowns.
+2025-09-22 11:54:51 INFO: Successfully retrieved all factories.
+2025-09-22 11:54:52 INFO: Successfully retrieved all factories.
+2025-09-22 11:54:52 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:52 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:53 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:53 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:53 INFO: Retrieved 50 of 58 orders for page 1
+2025-09-22 11:54:53 INFO: Retrieved 50 of 58 orders for page 1
+2025-09-22 11:54:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:54:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:00 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:00 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:42 INFO: Successfully retrieved party list for dropdowns.
+2025-09-22 11:55:42 INFO: Successfully retrieved all factories.
+2025-09-22 11:55:42 INFO: Successfully retrieved party list for dropdowns.
+2025-09-22 11:55:42 INFO: Successfully retrieved all factories.
+2025-09-22 11:55:43 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:55:43 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:55:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:46 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:55:46 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:57:56 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:57:56 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:57:58 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:57:58 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:58:20 INFO: Successfully retrieved Associate Company: EV Ind (ID: 688916d9fd317e92452edf71)
+2025-09-22 11:58:20 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:58:20 INFO: Retrieved 0 of 0 orders for page 1
+2025-09-22 11:58:20 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:58:20 INFO: Retrieved 0 of 0 orders for page 1
+2025-09-22 11:58:23 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:58:23 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:58:24 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 11:58:24 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 11:58:24 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:58:24 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:58:24 INFO: Retrieved 0 of 0 orders for page 1
+2025-09-22 11:58:24 INFO: Retrieved 0 of 0 orders for page 1
+2025-09-22 11:59:05 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 11:59:05 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:05 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:05 INFO: Retrieved 2 of 2 orders for page 1
+2025-09-22 11:59:05 INFO: Retrieved 2 of 2 orders for page 1
+2025-09-22 11:59:07 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:07 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:08 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 11:59:09 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 11:59:09 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:09 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:09 INFO: Retrieved 2 of 2 orders for page 1
+2025-09-22 11:59:09 INFO: Retrieved 2 of 2 orders for page 1
+2025-09-22 11:59:10 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:10 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:11 INFO: Successfully retrieved Associate Company: EV Ind (ID: 688916d9fd317e92452edf71)
+2025-09-22 11:59:11 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:11 INFO: Successfully retrieved Associate Company: EV Ind (ID: 688916d9fd317e92452edf71)
+2025-09-22 11:59:11 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:11 INFO: Retrieved 5 of 5 orders for page 1
+2025-09-22 11:59:11 INFO: Retrieved 5 of 5 orders for page 1
+2025-09-22 11:59:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:15 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:15 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 11:59:16 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:16 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 11:59:16 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:16 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 11:59:16 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 11:59:17 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:17 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:20 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:59:20 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:59:21 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:21 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 11:59:21 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 11:59:21 INFO: Successfully retrieved pallet statistics.
+2025-09-22 11:59:25 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:59:25 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:59:25 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:59:25 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 11:59:25 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 11:59:25 INFO: Successfully retrieved all factories.
+2025-09-22 11:59:25 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 11:59:25 INFO: Successfully retrieved all factories.
+2025-09-22 11:59:25 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:02:17 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:02:17 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:02:19 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 12:02:19 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 12:02:19 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:02:19 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:02:19 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 12:02:19 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 12:02:20 INFO: Successfully retrieved party list for dropdowns.
+2025-09-22 12:02:20 INFO: Successfully retrieved party list for dropdowns.
+2025-09-22 12:02:20 INFO: Successfully retrieved all factories.
+2025-09-22 12:02:20 INFO: Successfully retrieved all factories.
+2025-09-22 12:02:21 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:02:21 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:02:22 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 12:02:22 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:02:22 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 12:02:22 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:09:29 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:09:29 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:09:30 INFO: Successfully retrieved party: Raj Impex (ID: 68890d80fd317e92452edee0)
+2025-09-22 12:09:30 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:09:30 INFO: Successfully retrieved party: Raj Impex (ID: 68890d80fd317e92452edee0)
+2025-09-22 12:09:31 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:09:31 INFO: Retrieved 7 of 7 orders for page 1
+2025-09-22 12:09:31 INFO: Retrieved 7 of 7 orders for page 1
+2025-09-22 12:09:32 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:32 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:33 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 12:09:33 INFO: Successfully retrieved Associate Company: abc limited (ID: 688a59dc2f3cebea154512b1)
+2025-09-22 12:09:33 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:09:33 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:09:33 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 12:09:33 INFO: Retrieved 1 of 1 orders for page 1
+2025-09-22 12:09:36 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:36 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:38 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:38 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:38 INFO: Retrieved 50 of 58 orders for page 1
+2025-09-22 12:09:38 INFO: Retrieved 50 of 58 orders for page 1
+2025-09-22 12:09:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:09:38 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:09:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:09:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:09:38 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:09:38 INFO: Successfully retrieved all factories.
+2025-09-22 12:09:38 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:09:38 INFO: Successfully retrieved all factories.
+2025-09-22 12:09:39 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:10:38 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:10:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:10:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:10:38 INFO: Successfully retrieved all factories.
+2025-09-22 12:10:38 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:10:38 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:38 INFO: Successfully retrieved all factories.
+2025-09-22 12:10:39 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:42 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:42 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:43 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 12:10:43 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:10:43 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-22 12:10:43 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:10:43 INFO: Retrieved 2 of 2 orders for page 1
+2025-09-22 12:10:43 INFO: Retrieved 2 of 2 orders for page 1
+2025-09-22 12:10:45 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:10:45 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:10:46 INFO: Successfully retrieved party: Megacity (ID: 68890d75fd317e92452ededc)
+2025-09-22 12:10:46 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:10:46 INFO: Successfully retrieved party: Megacity (ID: 68890d75fd317e92452ededc)
+2025-09-22 12:10:46 INFO: Retrieved 8 of 8 orders for page 1
+2025-09-22 12:10:46 INFO: Retrieved 8 of 8 orders for page 1
+2025-09-22 12:10:47 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:10:47 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:10:47 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:47 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:10:47 INFO: Successfully retrieved all pallet sizes.
+2025-09-22 12:10:47 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:10:47 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:10:59 INFO: Transaction created: BILL-0018
+2025-09-22 12:11:00 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:11:01 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 12:11:01 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:11:01 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-22 12:11:01 INFO: Successfully retrieved pallet statistics.
+2025-09-22 12:11:01 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:11:01 INFO: Successfully retrieved all parties with factory details.
+2025-09-22 12:11:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:11:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-22 12:11:02 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-22 12:11:03 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-24 19:09:53 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:09:54 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:09:54 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 19:09:54 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:09:54 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:09:55 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:09:55 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:09:55 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:09:55 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 19:09:55 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:10:28 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:10:28 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:10:28 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:10:28 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:12:47 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:12:47 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:12:48 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:12:48 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:12:50 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:12:50 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:12:50 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:12:51 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:12:58 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:12:58 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:12:59 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:12:59 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:15:11 ERROR: Failed to get inventory for Production House ID 68890d17fd317e92452edecd: Operation `productionhouses.findOne()` buffering timed out after 10000ms
+2025-09-24 19:15:11 ERROR: Failed to retrieve pallet statistics: Operation `orders.aggregate()` buffering timed out after 10000ms
+2025-09-24 19:15:14 ERROR: Failed to fetch all parties: Operation `parties.find()` buffering timed out after 10000ms
+2025-09-24 19:15:14 ERROR: Failed to fetch all pallet sizes: Operation `pallets.find()` buffering timed out after 10000ms
+2025-09-24 19:15:21 ERROR: Failed to get inventory for Production House ID 68890d17fd317e92452edecd: Operation `productionhouses.findOne()` buffering timed out after 10000ms
+2025-09-24 19:15:21 ERROR: Failed to retrieve pallet statistics: Operation `orders.aggregate()` buffering timed out after 10000ms
+2025-09-24 19:15:24 ERROR: Failed to fetch all parties: Operation `parties.find()` buffering timed out after 10000ms
+2025-09-24 19:15:24 ERROR: Failed to fetch all pallet sizes: Operation `pallets.find()` buffering timed out after 10000ms
+2025-09-24 19:15:30 ERROR: Server error during login for user 'shanvi': Operation `productionhouses.findOne()` buffering timed out after 10000ms
+2025-09-24 19:16:07 ERROR: Server error during login for user 'shanvi': Operation `productionhouses.findOne()` buffering timed out after 10000ms
+2025-09-24 19:16:22 INFO: User logged in successfully: 'shanvi' (ID: 68890d17fd317e92452edecd)
+2025-09-24 19:16:22 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:16:22 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:16:22 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:16:22 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:16:36 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:16:36 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 19:16:36 INFO: Successfully retrieved pallet statistics.
+2025-09-24 19:16:37 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:23 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-24 20:19:23 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:24 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-24 20:19:25 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:25 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 20:19:26 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-24 20:19:26 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-24 20:19:27 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:28 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 20:19:28 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-24 20:19:28 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:28 WARN: Inventory not found for Production House ID: 68af062dccb04d4167043cfb
+2025-09-24 20:19:30 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:31 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:38 INFO: Successfully retrieved all pallet sizes.
+2025-09-24 20:19:52 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 20:19:52 INFO: Successfully retrieved all pallet sizes.
+2025-09-24 20:19:52 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 20:19:52 INFO: Successfully retrieved all pallet sizes.
+2025-09-24 20:19:53 INFO: User logged in successfully: 'shanvi' (ID: 68890d17fd317e92452edecd)
+2025-09-24 20:19:53 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 20:19:53 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 20:19:54 INFO: Successfully retrieved all parties with factory details.
+2025-09-24 20:19:54 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:54 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:54 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:54 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:19:55 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 20:19:55 INFO: Successfully retrieved all factories.
+2025-09-24 20:19:55 INFO: Successfully retrieved all Associate Companies.
+2025-09-24 20:19:55 INFO: Successfully retrieved all factories.
+2025-09-24 20:19:56 INFO: Successfully retrieved all Associate Companies.
+2025-09-24 20:23:32 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:23:32 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:23:33 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-24 20:23:33 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:23:33 INFO: Successfully retrieved pallet statistics.
+2025-09-24 20:23:33 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 01:39:55 INFO: Successfully retrieved pallet statistics.
+2025-09-25 01:39:56 INFO: Successfully retrieved pallet statistics.
+2025-09-25 01:39:56 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 01:39:56 INFO: Successfully retrieved pallet statistics.
+2025-09-25 01:39:56 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 01:39:57 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:39:33 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:39:33 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:39:33 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:39:33 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:39:33 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:39:33 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:15 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:40:15 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:15 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:40:15 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:15 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:15 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:24 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:40:24 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:24 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:40:24 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:24 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:40:25 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:41:38 INFO: Successfully retrieved all Associate Companies.
+2025-09-25 12:41:39 INFO: Successfully retrieved all Associate Companies.
+2025-09-25 12:41:40 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:41:40 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:41:40 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:41:40 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:41:40 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:41:40 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:52:17 INFO: User logged in successfully: 'shanvi' (ID: 68890d17fd317e92452edecd)
+2025-09-25 12:52:17 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:52:17 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:52:18 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:52:18 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:52:18 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:52:38 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:59:24 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:59:24 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:59:24 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 12:59:25 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:59:25 INFO: Successfully retrieved pallet statistics.
+2025-09-25 12:59:25 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:19 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:19 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:19 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 13:01:19 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 13:01:19 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:19 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:42 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 13:01:42 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:42 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-25 13:01:42 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:42 INFO: Successfully retrieved pallet statistics.
+2025-09-25 13:01:42 INFO: Successfully retrieved pallet statistics.
+2025-09-30 12:30:48 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-30 12:30:48 INFO: Successfully retrieved pallet statistics.
+2025-09-30 12:30:48 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-30 12:30:48 INFO: Successfully retrieved pallet statistics.
+2025-09-30 12:30:48 INFO: Successfully retrieved pallet statistics.
+2025-09-30 12:30:48 INFO: Successfully retrieved pallet statistics.
+2025-09-30 14:50:19 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 14:50:20 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 14:50:27 INFO: Successfully retrieved all factories.
+2025-09-30 14:50:28 INFO: Successfully retrieved all factories.
+2025-09-30 14:50:28 INFO: Successfully retrieved party list for dropdowns.
+2025-09-30 14:50:28 INFO: Successfully retrieved party list for dropdowns.
+2025-09-30 14:50:50 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-30 14:50:51 INFO: Successfully retrieved inventory for Production House ID: 68890d17fd317e92452edecd
+2025-09-30 14:50:55 INFO: Successfully retrieved pallet statistics.
+2025-09-30 14:50:55 INFO: Successfully retrieved pallet statistics.
+2025-09-30 14:50:55 INFO: Successfully retrieved pallet statistics.
+2025-09-30 14:50:55 INFO: Successfully retrieved pallet statistics.
+2025-09-30 18:03:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:02 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:03 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:03 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:03 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:03 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:03 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:05 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:07 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:07 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:07 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:07 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:07 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:07 INFO: Successfully retrieved all factories.
+2025-09-30 18:03:07 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:07 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:08 INFO: Successfully retrieved all factories.
+2025-09-30 18:03:08 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:08 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:09 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:09 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:10 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:11 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:12 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:12 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:12 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:13 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:13 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:13 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:03:23 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:24 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:43 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:43 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:43 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:44 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:44 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:47 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:47 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:48 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:48 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:49 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:49 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:49 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:53 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:53 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:53 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:03:53 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:53 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:53 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:58 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:58 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:03:58 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:03:59 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:04:00 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:00 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:08 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:04:09 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:04:25 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:25 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:04:25 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:04:25 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:25 INFO: Successfully retrieved all pallet sizes.
+2025-09-30 18:04:25 INFO: Successfully retrieved all parties with factory details.
+2025-09-30 18:04:31 INFO: Transaction updated: BILL-0018 (ID: 68d0ef7a7b2c69e4ea9f22da)
+2025-09-30 18:04:33 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:04:39 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:40 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:42 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-30 18:04:42 INFO: Successfully retrieved pallet statistics.
+2025-09-30 18:04:42 INFO: Successfully retrieved pallet statistics.
+2025-09-30 18:04:42 INFO: Successfully retrieved Associate Company: Voroly Pine (ID: 688916cbfd317e92452edf6e)
+2025-09-30 18:04:43 INFO: Retrieved 3 of 3 orders for page 1
+2025-09-30 18:04:43 INFO: Retrieved 3 of 3 orders for page 1
+2025-09-30 18:04:53 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:54 INFO: Successfully retrieved all Associate Companies.
+2025-09-30 18:04:56 INFO: Retrieved 50 of 59 orders for page 1
+2025-09-30 18:04:56 INFO: Retrieved 50 of 59 orders for page 1
